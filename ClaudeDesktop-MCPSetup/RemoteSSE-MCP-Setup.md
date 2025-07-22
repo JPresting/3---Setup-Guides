@@ -39,13 +39,34 @@ Remote Server-Sent Events (SSE) MCP servers connect to external services running
 - `--sse`: Specifies SSE mode
 - `https://your-server.com/mcp/endpoint/sse`: The SSE endpoint URL
 
-## Common Remote SSE Servers
+## Common Remote SSE Use Cases
 
-### n8n Email Automation
-**Remote Service**: Custom n8n workflow automation endpoint
+### Custom Business Automation
+**Remote Service**: Company-specific automation and data access
 
 ```json
-"n8n-email": {
+"business-automation": {
+  "command": "npx",
+  "args": [
+    "-y",
+    "supergateway",
+    "--sse",
+    "https://internal-apis.company.com/mcp/sse"
+  ]
+}
+```
+
+**Capabilities**:
+- Access internal company databases
+- Custom business rules and workflows
+- Integration with proprietary systems
+- Compliance and audit logging
+
+### Email Automation Service
+**Remote Service**: Custom email workflow automation endpoint
+
+```json
+"email-automation": {
   "command": "npx",
   "args": [
     "-y",
@@ -62,7 +83,7 @@ Remote Server-Sent Events (SSE) MCP servers connect to external services running
 - Integration with multiple email providers
 - Advanced email parsing and routing
 
-### GitHub Remote Integration
+### Cloud-Hosted GitHub Integration
 **Remote Service**: GitHub operations via remote server
 
 ```json
@@ -82,27 +103,6 @@ Remote Server-Sent Events (SSE) MCP servers connect to external services running
 - Higher rate limits (shared across users)
 - Advanced features (webhooks, CI/CD integration)
 - No local token management
-
-### Custom Business Logic Server
-**Remote Service**: Company-specific automation and data access
-
-```json
-"business-logic": {
-  "command": "npx",
-  "args": [
-    "-y",
-    "supergateway",
-    "--sse",
-    "https://internal-apis.company.com/mcp/sse"
-  ]
-}
-```
-
-**Capabilities**:
-- Access internal company databases
-- Custom business rules and workflows
-- Integration with proprietary systems
-- Compliance and audit logging
 
 ## Authentication Methods
 
@@ -254,17 +254,6 @@ GitMCP allows accessing MCP servers directly from GitHub repositories:
 
 ### Popular GitMCP Examples
 
-**n8n Workflows Repository**:
-```json
-"n8n-workflows": {
-  "command": "npx",
-  "args": [
-    "mcp-remote",
-    "https://gitmcp.io/Zie619/n8n-workflows"
-  ]
-}
-```
-
 **Documentation MCP Server**:
 ```json
 "docs-mcp-server": {
@@ -272,6 +261,17 @@ GitMCP allows accessing MCP servers directly from GitHub repositories:
   "args": [
     "mcp-remote",
     "https://gitmcp.io/arabold/docs-mcp-server"
+  ]
+}
+```
+
+**Community Workflows Repository**:
+```json
+"community-workflows": {
+  "command": "npx",
+  "args": [
+    "mcp-remote",
+    "https://gitmcp.io/username/workflow-templates"
   ]
 }
 ```
@@ -413,5 +413,39 @@ nslookup api.service.com
 - **Simple setup**: Service has minimal dependencies
 - **Cost concerns**: Want to avoid hosting costs
 - **Development**: Developing and testing MCP servers
+
+## Popular Remote SSE Patterns
+
+### Microservice Architecture
+Connect to multiple specialized remote services:
+
+```json
+"auth-service": {
+  "command": "npx",
+  "args": ["supergateway", "--sse", "https://auth.company.com/mcp/sse"]
+},
+"data-service": {
+  "command": "npx",
+  "args": ["supergateway", "--sse", "https://data.company.com/mcp/sse"]
+},
+"notification-service": {
+  "command": "npx",
+  "args": ["supergateway", "--sse", "https://notify.company.com/mcp/sse"]
+}
+```
+
+### Load-Balanced Services
+Connect to services with multiple endpoints for redundancy:
+
+```json
+"primary-service": {
+  "command": "npx",
+  "args": ["supergateway", "--sse", "https://primary.service.com/mcp/sse"]
+},
+"backup-service": {
+  "command": "npx",
+  "args": ["supergateway", "--sse", "https://backup.service.com/mcp/sse"]
+}
+```
 
 Remote SSE MCP servers provide powerful capabilities with centralized management and shared infrastructure, making them ideal for enterprise deployments and complex integrations that benefit from always-available, professionally managed services.
