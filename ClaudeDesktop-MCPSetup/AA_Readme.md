@@ -1,4 +1,4 @@
-Here's the complete updated README file with the n8n section added:
+
 
 # Claude Desktop MCP Setup Guide
 
