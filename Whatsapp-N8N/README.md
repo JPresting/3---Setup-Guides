@@ -91,3 +91,14 @@ We now want to set up the API to **send messages and templates**.
 
 ## **6. Done**  
 The setup is now complete and you can send messages and templates using the WhatsApp API in N8N.
+
+## Important: Using the Same Phone Number in Multiple Workflows
+
+If you want to use a phone number that is already integrated in another N8N workflow, you need to follow this process to avoid the "phone number already in use" error:
+
+1. **Set up your new workflow** with the WhatsApp webhook node
+2. **Click "Listen for Test Event"** in the new workflow  
+3. **Immediately send a message** to the WhatsApp number from your phone (within 2-5 seconds)
+4. **The new workflow will now be active** and the old workflow will be automatically deactivated (or at least the webhook does not trigger any longer)
+
+If you don't send a message within the 2-5 second window, you'll get an error that the phone number is already in use.

@@ -1,3 +1,5 @@
+Here's the complete updated README file with the n8n section added:
+
 # Claude Desktop MCP Setup Guide
 
 A comprehensive guide to setting up Model Context Protocol (MCP) servers with Claude Desktop on Windows.
@@ -158,6 +160,64 @@ Most servers work with just an API key:
 ### Advanced Setup Servers
 
 Some servers require additional configuration steps beyond simple API keys.
+
+#### n8n Workflow Automation Setup
+**Requirements:** n8n instance URL + API key + 3 different MCP servers for complete functionality
+
+n8n integration requires three separate MCP servers because each serves a different purpose:
+- **n8n-mcp**: Direct API access for creating, editing, and managing workflows
+- **n8n-workflows**: Provides workflow templates and examples
+- **docs-mcp-server**: Ensures Claude has up-to-date n8n documentation
+
+**Getting your n8n credentials:**
+
+1. **n8n Instance URL**: 
+   - If self-hosted: Your n8n instance URL (e.g., `https://n8n.yourdomain.com`)
+   - If using n8n Cloud: Your cloud instance URL (e.g., `https://your-instance.n8n.cloud`)
+
+2. **API Key Generation**:
+   - Open your n8n instance
+   - Click on your user avatar (top right)
+   - Go to "Settings" → "API"
+   - Click "Create an API Key"
+   - Give it a descriptive name (e.g., "Claude MCP Integration")
+   - Copy the generated API key immediately (you won't see it again!)
+
+3. **Configuration** (all three servers needed for full functionality):
+```json
+"n8n-mcp": {
+  "command": "npx",
+  "args": ["n8n-mcp"],
+  "env": {
+    "MCP_MODE": "stdio",
+    "LOG_LEVEL": "error",
+    "DISABLE_CONSOLE_OUTPUT": "true",
+    "N8N_API_URL": "https://your-n8n-instance.com",
+    "N8N_API_KEY": "your-n8n-api-key-here"
+  }
+},
+"n8n-workflows": {
+  "command": "npx",
+  "args": [
+    "mcp-remote",
+    "https://gitmcp.io/Zie619/n8n-workflows"
+  ]
+},
+"docs-mcp-server": {
+  "command": "npx",
+  "args": [
+    "mcp-remote",
+    "https://gitmcp.io/arabold/docs-mcp-server"
+  ]
+}
+```
+
+**Why three servers?**
+- **n8n-mcp**: Provides direct API access to your n8n instance for real-time workflow management
+- **n8n-workflows**: Offers pre-built workflow templates and examples that Claude can reference
+- **docs-mcp-server**: Keeps Claude updated with the latest n8n documentation, ensuring accurate assistance
+
+**Note**: You can use just the n8n-mcp server if you only need basic workflow management, but having all three provides the best experience.
 
 #### Google Maps API Setup
 **Requirements:** Multiple API activations + API key
