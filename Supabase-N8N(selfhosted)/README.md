@@ -374,3 +374,7 @@ Your self-hosted Supabase supports multiple integration approaches:
 - **Features**: Semantic search, AI chatbots, LLM context retrieval
 
 **Recommendation**: Use Supabase API method with vector database for AI applications and close port 5432 in firewall for maximum security.
+
+
+
+**Need a more advanced deployment, integration, or enterprise automation?** Visit [Stardawnai.com](https://stardawnai.com) for professional consulting and development on AI-driven process automation, SAP integration, self-hosted enterprise N8N workflows, and custom hybrid infrastructure solutions tailored to your business needs.

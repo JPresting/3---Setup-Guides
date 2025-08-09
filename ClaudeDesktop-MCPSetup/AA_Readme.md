@@ -172,3 +172,6 @@ Popular MCP servers include:
 ---
 
 *This guide covers Windows-specific setup. For macOS/Linux, the APPDATA workaround is not needed.*
+
+
+**Need a more advanced deployment, integration, or enterprise automation?** Visit [Stardawnai.com](https://stardawnai.com) for professional consulting and development on AI-driven process automation, SAP integration, self-hosted enterprise N8N workflows, and custom hybrid infrastructure solutions tailored to your business needs.

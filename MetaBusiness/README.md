@@ -145,7 +145,8 @@ This means that simply having a website or social media accounts is not sufficie
 
 
 ## **2.1 Using the WhatsApp Business API**
-How to set up this API on N8N or other API platforms is shown in detail in this repo: https://github.com/JimPresting/Setting-up-Whatsapp-on-N8N.
+How to set up this API on N8N or other API platforms is shown in detail in this repo: https://github.com/JPresting/Whatsapp-N8N.
 
 
 
+**Need a more advanced deployment, integration, or enterprise automation?** Visit [Stardawnai.com](https://stardawnai.com) for professional consulting and development on AI-driven process automation, SAP integration, self-hosted enterprise N8N workflows, and custom hybrid infrastructure solutions tailored to your business needs.
