@@ -16,7 +16,7 @@
 
 ### 1.4 **Now, if you click on **Security Center** to verify your business, it will most likely display the message: **"Your organization does not need to be verified."****
 ![Screenshot 2025-03-12 103414](https://github.com/user-attachments/assets/60d651bf-644a-4e3c-8a05-6ac984a56860)
-That’s because you haven’t created or added anything that would prompt Meta to require verification.  
+That’s because you haven’t created or added anything that would prompt Meta to require verification. This is needed for using the WhatsApp Business API! 
 
 👉 **Quick workaround:** Simply create an app.
 ![image](https://github.com/user-attachments/assets/38e1db2f-7035-444b-b8ba-923dd429e243)
