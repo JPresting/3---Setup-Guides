@@ -108,6 +108,12 @@ If you go back to the [business.facebook.com](https://business.facebook.com) pag
 Under Phone Numbers it now says Pending (its not really Pending nothing will happen once you dont act from here)
 ![image](https://github.com/user-attachments/assets/96986918-d9f0-4922-946c-69f2496b0694)
 
+Make sure you have added a system user and granted all the whatsapp and app permissions otherwise, you will get an error like this: 
+<img width="614" height="301" alt="Screenshot 2025-11-13 111015" src="https://github.com/user-attachments/assets/1fdcd8a4-92ed-453e-a15a-43a4e04b9e48" />
+<img width="1982" height="1074" alt="Screenshot 2025-11-13 114301" src="https://github.com/user-attachments/assets/3959e58e-4c88-48ac-9198-0da1738b3e90" />
+
+It might take a couple of minutes to register. 
+
 Go back to the developers.facebook.com page click on Generate access token and remeber the last couple of digits of your WabaID which is displayed on the same page.
 ![image](https://github.com/user-attachments/assets/6e9bf94e-cbb4-46f2-b557-c6fbfb43d483)
 1. Click on Edit Previous Settings
