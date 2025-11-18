@@ -160,6 +160,9 @@ curl -X POST 'https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages' \
     "type": "interactive",
     "interactive": {
       "type": "call_permission_request",
+      "action": {
+        "name": "call_permission_request"
+      },
       "body": {
         "text": "Can I call you?"
       }
