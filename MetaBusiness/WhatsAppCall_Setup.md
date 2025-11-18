@@ -177,8 +177,8 @@ curl -X POST 'https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages' \
 ```json
 {
   "call_permission_requests": [{
-    "from": "1234567890",
-    "status": "granted"
+    "response_source": "user_action"
+    "response": "accept"
   }]
 }
 ```
