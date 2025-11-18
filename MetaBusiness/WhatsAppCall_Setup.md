@@ -31,6 +31,9 @@ US, Nigeria, Canada, Vietnam, Turkey
 
 Retrieve all phone numbers to identify the correct Phone Number ID:
 
+<img width="2185" height="1200" alt="Screenshot 2025-11-18 125144" src="https://github.com/user-attachments/assets/e4793269-0894-4529-82aa-4fa28b4cfcc8" />
+
+
 ```bash
 curl -X GET 'https://graph.facebook.com/v23.0/{WABA_ID}/phone_numbers' \
   -H 'Authorization: Bearer {ACCESS_TOKEN}'
