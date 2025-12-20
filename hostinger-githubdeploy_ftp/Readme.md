@@ -1,10 +1,6 @@
-Understood. You are right – a general guide should default to standard behavior (deploy on change), not your specific custom schedule.
 
-Here is the **clean, general-purpose README** for any future project. The YAML is set to deploy **immediately on push** (standard), with the schedule commented out as an optional example.
 
----
-
-# Deployment Guide: Google AI Studio to Hostinger
+# 💎Deployment Guide: Google AI Studio to Hostinger💎
 
 This guide documents the setup process to deploy any React/Vite project exported from Google AI Studio to Hostinger Shared Hosting using GitHub Actions.
 
