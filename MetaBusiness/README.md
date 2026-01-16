@@ -161,7 +161,8 @@ It might take a couple of minutes to register.
 
 Go back to the [developers.facebook.com](https://developers.facebook.com) page, click on **Generate access token**, and remember the last couple of digits of your WabaID which is displayed on the same page.
 
-![image](https://github.com/user-attachments/assets/44a9c0cf-1eb1-4e7f-ad34-4e79b7cc5988")
+<img width="1856" height="738" alt="image" src="https://github.com/user-attachments/assets/da897136-8e5f-45d6-8ec4-8f4eb3f84ecc" />
+
 
 ![image](https://github.com/user-attachments/assets/6e9bf94e-cbb4-46f2-b557-c6fbfb43d483)
 
