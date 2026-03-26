@@ -28,6 +28,66 @@
 
 ---
 
+## **4. Cloudflare Tunnel / Zero Trust — Webhook Bypass (IMPORTANT)**
+
+If your N8N instance is behind **Cloudflare Access** (Zero Trust), Meta's webhook verification will fail with **403 Forbidden**. This is because Cloudflare Access requires authentication on every request, and Meta's verification is a simple unauthenticated GET request.
+
+### The Problem
+When Meta tries to verify your webhook, it sends a GET request like:
+```
+GET /webhook/your-webhook-id/webhook?hub.mode=subscribe&hub.verify_token=xxx&hub.challenge=xxx
+```
+Cloudflare Access intercepts this, sees no session/cookie, and redirects to the login page → Meta gets 302/403 → verification fails.
+
+### The Fix
+You need to create a **Bypass policy** in Cloudflare Access that allows unauthenticated requests to both the `/webhook` and `/webhook-test` paths.
+
+1. Go to **Cloudflare Zero Trust Dashboard** → **Access** → **Applications**
+2. Find (or create) the Application that protects your N8N subdomain
+3. Set the **Public hostname**:
+   - **Subdomain**: your n8n subdomain (e.g. `n8n`)
+   - **Domain**: your domain
+   - **Path**: leave **empty** — this ensures both `/webhook` and `/webhook-test` paths are covered
+4. Under **Access policies**, create a policy:
+   - **Policy name**: `General Bypass`
+   - **Action**: **Bypass**
+   - **Selector**: `Everyone`
+5. Save
+
+> **Why the Path field must be empty or cover both paths:**  
+> When you click "Test step" in N8N, it registers the **Test URL** which uses `/webhook-test/...`. When the workflow is active in production, it uses `/webhook/...`. If you only bypass `/webhook`, the test verification will still get blocked by Cloudflare Access. Leaving the path empty ensures both work.
+
+> **Alternative:** If you don't want to bypass the entire subdomain, add **two** public hostname entries — one with path `webhook` and one with path `webhook-test`.
+
+---
+
+## **5. Deleting an Existing Webhook Subscription**
+
+If you get this error in N8N:
+```
+The WhatsApp App ID XXXXX already has a webhook subscription. 
+Delete it or use another App before executing the trigger.
+```
+
+This means there's already a webhook subscription registered for your App. You need to delete it first using the **App Access Token** (which is `APP_ID|APP_SECRET`):
+
+```bash
+curl -s -X DELETE "https://graph.facebook.com/v25.0/YOUR_APP_ID/subscriptions?access_token=YOUR_APP_ID|YOUR_APP_SECRET&object=whatsapp_business_account"
+```
+
+Replace `YOUR_APP_ID` and `YOUR_APP_SECRET` with the values from **App Settings > Basic** in the Meta Developer Dashboard.
+
+**Expected response:**
+```json
+{"success": true}
+```
+
+> **Important:** This uses an **App Access Token** (`APP_ID|APP_SECRET`), NOT a System User Token. If you use a System User Token you'll get the error: `(#15) This method must be called with an app access_token.`
+
+After deleting, go back to N8N and click **"Test step"** again.
+
+---
+
 ---
 
 ### **Setting up the WhatsApp API (sending Messages, Templates, etc.) in N8N**  
