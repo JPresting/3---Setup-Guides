@@ -143,7 +143,7 @@ Go back to [developers.facebook.com](https://developers.facebook.com) and refres
 
 ### Now we need to verify the phone number
 
-If you go back to the [business.facebook.com](https://business.facebook.com) page and refresh it, it should now say:
+If you go back to the [business.facebook.com](https://business.facebook.com) page and refresh it and go to Accounts WhatsApp Accounts and select your WhatsApp Account, it should now say:
 * **Business verification:** approved
 * **Account status:** approved
 * **Payment Method:** (Shown)
