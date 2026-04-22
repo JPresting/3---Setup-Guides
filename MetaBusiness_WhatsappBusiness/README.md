@@ -206,17 +206,23 @@ Go back to the [developers.facebook.com](https://developers.facebook.com) page, 
 
    ![image](https://github.com/user-attachments/assets/adc1aedb-237a-4438-bd39-a9c45f637f4b)
 
-2. Select the one that matches your **WhatsApp Business Account ID**. In your case, there should be just two options: the one you created and the Test Account.
+   If that does not appear just select Continue as "your Name".
+
+   <img width="274" height="314" alt="image" src="https://github.com/user-attachments/assets/fbcfda04-d115-4f83-8205-560c660bf4f2" />
+
+
+
+3. Select the one that matches your **WhatsApp Business Account ID**. In your case, there should be just two options: the one you created and the Test Account.
 
    ![image](https://github.com/user-attachments/assets/946155e7-0551-42d6-a38c-c3009cc0d901)
 
-3. Click on **"Continue"**, **"Save"**, and **"Got it"**.
+4. Click on **"Continue"**, **"Save"**, and **"Got it"**.
 
-4. Go back to the [business.facebook.com](https://business.facebook.com) page and refresh it. It should now say **Status: Connected**.
+5. Go back to the [business.facebook.com](https://business.facebook.com) page and refresh it. It should now say **Status: Connected**.
 
    ![image](https://github.com/user-attachments/assets/a1b549fa-7f38-4e22-ab7c-c0055c69fc55)
 
-5. If it does not show a **Messaging limit** and says **"Unavailable"**, this usually means your business is not verified yet or your display name is not approved. In that case, if you're using WhatsApp Desktop, contact the new number manually from your private number — just send any message. After at most one day, it should show you the messaging limit.
+6. If it does not show a **Messaging limit** and says **"Unavailable"**, this usually means your business is not verified yet or your display name is not approved. In that case, if you're using WhatsApp Desktop, contact the new number manually from your private number — just send any message. After at most one day, it should show you the messaging limit.
 
    ![image](https://github.com/user-attachments/assets/627f36f7-a63f-4185-b38c-65e05ebc409e)
 
