@@ -97,7 +97,7 @@ Now, you can use your test number to send a message to your own number—especia
 
 ![image](https://github.com/user-attachments/assets/316d2724-65b6-4bf2-a127-e483961db40d)
 
-Click on **Test Number** → **Add Phone Number**.
+Click on **Test Number** → **Add Phone Number** (so the first one where it says From).
 
 ![image](https://github.com/user-attachments/assets/ad4cf011-7cfd-4e5c-9554-8197d37a86ba)
 
