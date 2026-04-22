@@ -156,6 +156,11 @@ Under Phone Numbers it now says **Pending** (it's not really Pending; nothing wi
 
 ![image](https://github.com/user-attachments/assets/96986918-d9f0-4922-946c-69f2496b0694)
 
+Now go back to business.facebook.com under Users --> System Users:
+
+<img width="742" height="1172" alt="image" src="https://github.com/user-attachments/assets/53a8fd27-71d8-42bc-9a01-291a000e2f1b" />
+
+
 **Make sure you have added a system user and granted all the whatsapp and app permissions otherwise, you will get an error like this:**
 
 <img width="614" height="301" alt="Screenshot 2025-11-13 111015" src="https://github.com/user-attachments/assets/1fdcd8a4-92ed-453e-a15a-43a4e04b9e48" />
