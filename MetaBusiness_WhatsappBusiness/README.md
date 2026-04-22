@@ -79,6 +79,8 @@ Go to **Create App**.
 4.  You can now assign your **Business Portfolio** to the app. While this is optional, it’s recommended to do it here, as you will be prompted for it later if needed.
 5.  Click **Create App**.
 
+This Use Case "Other" option may not be available once you read this. In that case just select the app type closest to your need. It basically just changes the starting point of view.
+
 Depending on when you watch this, your interface should look something like this:
 
 ![image](https://github.com/user-attachments/assets/d7f4feda-ec58-46c0-994f-c6199a8018c6)
