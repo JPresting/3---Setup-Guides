@@ -120,7 +120,8 @@ Now you should be prompted with a missing payment method. Click on it.
 ![image](https://github.com/user-attachments/assets/6c476cff-dffd-48f4-9384-e14b89f1351e)
 
 It will lead you to this page - click on **Payment Settings** (if it doesn't load just refresh it):
-**Edit:** This link no longer redirects to this page. You can now add your payment method directly at developers.facebook.com.
+
+**Edit:** This link no longer redirects to this page. You can now add your payment method directly at developers.facebook.com. Just click on the warning that a payment method needs to be set up and set it up.
 
 ![image](https://github.com/user-attachments/assets/b3a577c0-48f1-417d-936d-3d9bd7131f2d)
 
