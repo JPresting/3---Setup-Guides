@@ -1,0 +1,832 @@
+{
+  "name": "Change Whatsapp WABA Profile Info",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Whatsapp Change Account Info",
+        "formDescription": "Select a Business Portfolio to continue",
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        32,
+        -64
+      ],
+      "id": "fee6dd83-76e5-47ca-ab25-8da2cebffc09",
+      "name": "On form submission",
+      "webhookId": "a1ac27a0-97ee-4e77-a86e-2034b211f8cd"
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "schema": "stardawn_config",
+        "operation": "getAll",
+        "tableId": "meta_tokens",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "name",
+              "condition": "eq",
+              "keyValue": "jim_user_token"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -64
+      ],
+      "id": "25acf03b-3474-428a-aa9e-a2d0d4640d41",
+      "name": "Get Token",
+      "credentials": {
+        "supabaseApi": {
+          "id": "3WuNt6TomqxPLUeg",
+          "name": "Internal Oracle1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v22.0/me/businesses",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        448,
+        -64
+      ],
+      "id": "13fd7d5a-9938-409e-8dd7-85b7ebd2c87a",
+      "name": "List Businesses"
+    },
+    {
+      "parameters": {
+        "defineForm": "json",
+        "jsonOutput": "=[\n  {\n    \"fieldLabel\": \"Business Portfolio\",\n    \"fieldType\": \"dropdown\",\n    \"fieldOptions\": {\n      \"values\": {{ $('List Businesses').item.json.data.map(b => ({ \"option\": b.name + ' | ' + b.id })) }}\n    },\n    \"requiredField\": true\n  }\n]",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        656,
+        -64
+      ],
+      "id": "373ad66f-73bd-4cf4-8d1c-56c1b9f44820",
+      "name": "Select Business",
+      "webhookId": "5a89739e-fd6d-47e1-bc83-fbdde0ae984d"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $json[\"Business Portfolio\"].split(\" | \")[1] }}/owned_whatsapp_business_accounts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        864,
+        -64
+      ],
+      "id": "f3a1c5e3-7eb8-4db9-ad00-e8d7200cf52d",
+      "name": "List WABAs"
+    },
+    {
+      "parameters": {
+        "defineForm": "json",
+        "jsonOutput": "=[\n  {\n    \"fieldLabel\": \"WhatsApp Business Account\",\n    \"fieldType\": \"dropdown\",\n    \"fieldOptions\": {\n      \"values\": {{ $('List WABAs').item.json.data.map(w => ({ \"option\": w.name + ' | ' + w.id })) }}\n    },\n    \"requiredField\": true\n  }\n]",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1088,
+        -64
+      ],
+      "id": "5b63d405-0a1e-4f04-86c1-c15a6ec0da92",
+      "name": "Select WABA",
+      "webhookId": "5a89739e-fd6d-47e1-bc83-fbdde0ae984d"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $json[\"WhatsApp Business Account\"].split(\" | \")[1] }}/phone_numbers",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,display_phone_number,verified_name"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1248,
+        -64
+      ],
+      "id": "24370a36-dce6-4e24-b26a-8242124fbb79",
+      "name": "List Phone Numbers"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/867535942105159/uploads",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "file_name",
+              "value": "={{ $json.file_name }}"
+            },
+            {
+              "name": "file_length",
+              "value": "={{ $json.file_length }}"
+            },
+            {
+              "name": "file_type",
+              "value": "={{ $json.file_type }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3024,
+        128
+      ],
+      "id": "4634393e-2088-42cc-b276-858375d31cc2",
+      "name": "Create Upload Session"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=OAuth {{ $(\"Get Token\").item.json.access_token }}"
+            },
+            {
+              "name": "file_offset",
+              "value": "0"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3472,
+        -80
+      ],
+      "id": "1e5ded03-3f4e-4b0e-a949-0619d6162dcd",
+      "name": "Upload Binary"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": " ✅ Profile Picture Updated",
+        "completionMessage": "The profile picture has been successfully updated.",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        4208,
+        -304
+      ],
+      "id": "f13980a0-1c54-4160-b6e4-613000ee2264",
+      "name": "Done",
+      "webhookId": "da31c8c6-c616-44b3-8bfd-43fd8fb018f1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nconst binaryKey = Object.keys(item.binary)[0];\nconst meta = item.binary[binaryKey];\n\nconst buffer = await this.helpers.getBinaryDataBuffer(0, binaryKey);\n\nconst preparedBinary = await this.helpers.prepareBinaryData(\n  buffer,\n  meta.fileName,\n  meta.mimeType\n);\n\nreturn [{\n  json: {\n    file_name: meta.fileName,\n    file_length: meta.bytes,\n    file_type: meta.mimeType\n  },\n  binary: {\n    data: preparedBinary\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2816,
+        -64
+      ],
+      "id": "ffb75838-0dcf-460c-b59f-d2bd012f5889",
+      "name": "Extract File Info"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3184,
+        -80
+      ],
+      "id": "acc7dff8-5522-49de-b3b9-9b0a9db3a356",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd53d98e-1acb-4000-a6ec-3024dc6d7897",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "JSON parameter needs to be valid JSON",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4112,
+        112
+      ],
+      "id": "8f42d707-7ece-4606-9b1a-33352af6df45",
+      "name": "too Large?"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "❌ Profile Picture Not Updated",
+        "completionMessage": "The profile picture could not be updated.\n\nCommon causes:\n- Image too large (max 5 MB)\n- Wrong format (use JPEG, 640×640 px)\n- Transparent background (use solid color)\n- Token expired or API rate limit\n\nPlease adjust your image and try again. If the problem persists, check the Meta platform status.",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        4448,
+        -64
+      ],
+      "id": "e148d23f-7b5e-4a66-abd5-cb80a512ab75",
+      "name": "Done1",
+      "webhookId": "da31c8c6-c616-44b3-8bfd-43fd8fb018f1"
+    },
+    {
+      "parameters": {
+        "defineForm": "json",
+        "jsonOutput": "=[\n  {\n    \"fieldLabel\": \"Phone Number\",\n    \"fieldType\": \"dropdown\",\n    \"fieldOptions\": {\n      \"values\": {{ $('List Phone Numbers').item.json.data.map(p => ({ \"option\": p.verified_name + ' (' + p.display_phone_number + ') | ' + p.id })) }}\n    },\n    \"requiredField\": true\n  }\n]",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1408,
+        -64
+      ],
+      "id": "c38a9ce3-b05e-4d9d-93de-a80027e1cb4d",
+      "name": "Select Phone",
+      "webhookId": "5a89739e-fd6d-47e1-bc83-fbdde0ae984d"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $json[\"Phone Number\"].split(\" | \")[1] }}/whatsapp_business_profile",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "about,address,description,email,profile_picture_url,websites,vertical"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1568,
+        -64
+      ],
+      "id": "3a8f2698-fd33-45b2-b238-30cc745d8350",
+      "name": "Get Current Profile"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"current_about\": \"{{ $json.data[0].about || '' }}\",\n  \"current_address\": \"{{ $json.data[0].address || '' }}\",\n  \"current_description\": \"{{ $json.data[0].description || '' }}\",\n  \"current_email\": \"{{ $json.data[0].email || '' }}\",\n  \"current_website1\": \"{{ $json.data[0].websites?.[0] || '' }}\",\n  \"current_website2\": \"{{ $json.data[0].websites?.[1] || '' }}\",\n  \"current_vertical\": \"{{ $json.data[0].vertical || 'OTHER' }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1744,
+        -64
+      ],
+      "id": "dc6fd4d6-43c2-4f24-9df1-b24e3f8e630e",
+      "name": "Prep Defaults"
+    },
+    {
+      "parameters": {
+        "defineForm": "json",
+        "jsonOutput": "=[\n  {\n    \"fieldLabel\": \"About (max 139 chars) — current: {{ ($json.current_about || 'not set').replace(/\\\\n/g, ' ').replace(/\\\"/g, '') }}\",\n    \"fieldType\": \"textarea\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Description (max 512 chars) — current: {{ ($json.current_description || 'not set').replace(/\\\\n/g, ' ').replace(/\\\"/g, '').substring(0, 100) }}...\",\n    \"fieldType\": \"textarea\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Address (max 256 chars) — current: {{ ($json.current_address || 'not set').replace(/\\\\n/g, ' ').replace(/\\\"/g, '') }}\",\n    \"fieldType\": \"text\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Email (max 128 chars) — current: {{ $json.current_email || 'not set' }}\",\n    \"fieldType\": \"email\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Website 1 (max 256 chars, must include https://) — current: {{ $json.current_website1 || 'not set' }}\",\n    \"fieldType\": \"text\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Website 2 (optional) — current: {{ $json.current_website2 || 'not set' }}\",\n    \"fieldType\": \"text\",\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Industry — current: {{ $json.current_vertical || 'not set' }} (cannot be unset)\",\n    \"fieldType\": \"dropdown\",\n    \"fieldOptions\": {\n      \"values\": [\n        {\"option\": \"OTHER\"},\n        {\"option\": \"AUTO\"},\n        {\"option\": \"BEAUTY\"},\n        {\"option\": \"APPAREL\"},\n        {\"option\": \"EDU\"},\n        {\"option\": \"ENTERTAIN\"},\n        {\"option\": \"EVENT_PLAN\"},\n        {\"option\": \"FINANCE\"},\n        {\"option\": \"GROCERY\"},\n        {\"option\": \"GOVT\"},\n        {\"option\": \"HOTEL\"},\n        {\"option\": \"HEALTH\"},\n        {\"option\": \"NONPROFIT\"},\n        {\"option\": \"PROF_SERVICES\"},\n        {\"option\": \"RETAIL\"},\n        {\"option\": \"TRAVEL\"},\n        {\"option\": \"RESTAURANT\"},\n        {\"option\": \"NOT_A_BIZ\"}\n      ]\n    },\n    \"requiredField\": false\n  },\n  {\n    \"fieldLabel\": \"Profile Picture (optional, JPEG 640x640, max 5MB, no transparency)\",\n    \"fieldType\": \"file\",\n    \"acceptFileTypes\": \"image/jpeg,image/png\",\n    \"requiredField\": false\n  }\n]",
+        "options": {
+          "customCss": "/* ============================================================\n   STARDAWN.AI — Celestial Nexus Theme für n8n Forms\n   Paste this complete block into n8n → Form Trigger → Custom CSS\n   ============================================================ */\n\n@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');\n\n:root {\n\t/* ---------- Typography ---------- */\n\t--font-family: 'Plus Jakarta Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 14px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 28px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 13px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 32px;\n\t--font-size-html-h2: 24px;\n\t--font-size-html-h3: 18px;\n\t--font-size-html-h4: 16px;\n\t--font-size-html-h5: 14px;\n\t--font-size-html-h6: 12px;\n\t--font-size-subheader: 14px;\n\n\t/* ---------- Colors: The Void & The Pulse ---------- */\n\t--color-background: #000000;\n\t--color-test-notice-text: #4cd7f6;\n\t--color-test-notice-bg: rgba(76, 215, 246, 0.06);\n\t--color-test-notice-border: rgba(76, 215, 246, 0.25);\n\t--color-card-bg: rgba(19, 19, 19, 0.7);\n\t--color-card-border: rgba(61, 73, 76, 0.4);\n\t--color-card-shadow: rgba(76, 215, 246, 0.15);\n\t--color-link: #4cd7f6;\n\t--color-header: #ffffff;\n\t--color-label: #bcc9cd;\n\t--color-input-border: rgba(61, 73, 76, 0.5);\n\t--color-input-text: #ffffff;\n\t--color-focus-border: #4cd7f6;\n\t--color-submit-btn-bg: #4cd7f6;\n\t--color-submit-btn-text: #000000;\n\t--color-error: #ff4d6d;\n\t--color-required: #4cd7f6;\n\t--color-clear-button-bg: #3d494c;\n\t--color-html-text: #bcc9cd;\n\t--color-html-link: #4cd7f6;\n\t--color-header-subtext: #869397;\n\n\t/* ---------- Border Radii ---------- */\n\t--border-radius-card: 16px;\n\t--border-radius-input: 12px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 16px;\n\n\t/* ---------- Spacing (breathe in the void) ---------- */\n\t--padding-container-top: 40px;\n\t--padding-card: 40px;\n\t--padding-test-notice-vertical: 14px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 20px;\n\t--padding-form-input: 14px;\n\t--card-padding: 40px;\n\t--card-margin-bottom: 20px;\n\n\t/* ---------- Dimensions ---------- */\n\t--container-width: 520px;\n\t--submit-btn-height: 52px;\n\t--checkbox-size: 18px;\n\n\t/* ---------- Cyan Aura instead of shadow ---------- */\n\t--box-shadow-card: 0px 0px 40px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.4;\n}\n\n/* ============================================================\n   Celestial Nexus — Enhanced Effects\n   ============================================================ */\n\n/* Void background with subtle nebula */\nbody {\n\tbackground: #000000 !important;\n\tbackground-image:\n\t\tradial-gradient(circle at 15% 25%, rgba(76, 215, 246, 0.08) 0%, transparent 45%),\n\t\tradial-gradient(circle at 85% 75%, rgba(0, 91, 107, 0.12) 0%, transparent 50%) !important;\n\tbackground-attachment: fixed !important;\n\tcolor: #bcc9cd;\n}\n\n/* Glassmorphism for cards */\n.card,\n[class*=\"card\"] {\n\tbackdrop-filter: blur(20px);\n\t-webkit-backdrop-filter: blur(20px);\n\tbackground: rgba(19, 19, 19, 0.7) !important;\n\tborder: 1px solid rgba(61, 73, 76, 0.4) !important;\n}\n\n/* Headlines — Space Grotesk with subtle glow */\nh1, h2, h3, h4, h5, h6,\n[class*=\"header\"]:not([class*=\"subtext\"]),\n[class*=\"title\"] {\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tletter-spacing: -0.02em;\n\ttext-shadow: 0 0 8px rgba(255, 255, 255, 0.15);\n\tcolor: #ffffff;\n}\n\n/* Labels */\nlabel {\n\tcolor: #bcc9cd !important;\n\tletter-spacing: 0.01em;\n}\n\n/* Inputs — floating glass */\ninput,\ntextarea,\nselect {\n\tbackground: rgba(27, 27, 27, 0.6) !important;\n\tcolor: #ffffff !important;\n\ttransition: all 0.25s ease;\n\tfont-family: 'Plus Jakarta Sans', sans-serif;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n\tbox-shadow: 0 0 0 4px rgba(76, 215, 246, 0.15) !important;\n\tborder-color: #4cd7f6 !important;\n\toutline: none !important;\n}\n\ninput::placeholder,\ntextarea::placeholder {\n\tcolor: #869397 !important;\n\topacity: 0.6;\n}\n\n/* Submit Button — The Pulse gradient */\nbutton[type=\"submit\"],\n[class*=\"submit\"] {\n\tbackground: linear-gradient(135deg, #4cd7f6 0%, #005b6b 100%) !important;\n\tcolor: #ffffff !important;\n\tfont-family: 'Space Grotesk', sans-serif !important;\n\tfont-weight: 600 !important;\n\tletter-spacing: 0.02em;\n\tborder: none !important;\n\tbox-shadow: 0 0 20px rgba(76, 215, 246, 0.25);\n\ttransition: all 0.25s ease;\n\ttext-transform: uppercase;\n\tfont-size: 14px !important;\n}\n\nbutton[type=\"submit\"]:hover,\n[class*=\"submit\"]:hover {\n\tbox-shadow: 0 0 32px rgba(76, 215, 246, 0.5) !important;\n\ttransform: translateY(-1px);\n}\n\n/* Links — cyan with hover glow */\na {\n\tcolor: #4cd7f6 !important;\n\ttext-decoration: none;\n\ttransition: all 0.2s ease;\n}\n\na:hover {\n\topacity: 0.85;\n\ttext-shadow: 0 0 8px rgba(76, 215, 246, 0.5);\n}\n\n/* Checkbox / Radio styling */\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n\taccent-color: #4cd7f6;\n}\n\n/* Scrollbar */\n::-webkit-scrollbar {\n\twidth: 8px;\n\theight: 8px;\n}\n\n::-webkit-scrollbar-track {\n\tbackground: #000000;\n}\n\n::-webkit-scrollbar-thumb {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tborder-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n\tbackground: rgba(76, 215, 246, 0.5);\n}\n\n/* Selection color */\n::selection {\n\tbackground: rgba(76, 215, 246, 0.3);\n\tcolor: #ffffff;\n}\n\n/* Test notice — cyan alert style */\n[class*=\"test-notice\"] {\n\tbackdrop-filter: blur(12px);\n\t-webkit-backdrop-filter: blur(12px);\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1952,
+        -64
+      ],
+      "id": "5367a735-57e7-496e-8bd2-767513e9614b",
+      "name": "Edit Profile Fields",
+      "webhookId": "5a89739e-fd6d-47e1-bc83-fbdde0ae984d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "684c060d-5ad7-4ad9-a635-a503cda109b1",
+              "leftValue": "={{ Object.keys($binary \n\n {}).length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2160,
+        -64
+      ],
+      "id": "5107e3dd-ac5c-4555-aff9-5e336558862f",
+      "name": "Has Image?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const form = $('Edit Profile Fields').item.json;\nconst handle = $input.first().json.h;\n\nconst body = { messaging_product: 'whatsapp' };\n\nconst aboutKey = Object.keys(form).find(k => k.startsWith('About'));\nconst descKey = Object.keys(form).find(k => k.startsWith('Description'));\nconst addrKey = Object.keys(form).find(k => k.startsWith('Address'));\nconst emailKey = Object.keys(form).find(k => k.startsWith('Email'));\nconst w1Key = Object.keys(form).find(k => k.startsWith('Website 1'));\nconst w2Key = Object.keys(form).find(k => k.startsWith('Website 2'));\nconst vertKey = Object.keys(form).find(k => k.startsWith('Industry'));\n\nif (form[aboutKey]) body.about = form[aboutKey];\nif (form[descKey]) body.description = form[descKey];\nif (form[addrKey]) body.address = form[addrKey];\nif (form[emailKey]) body.email = form[emailKey];\n\nconst websites = [];\nif (form[w1Key]) websites.push(form[w1Key]);\nif (form[w2Key]) websites.push(form[w2Key]);\nif (websites.length) body.websites = websites;\n\nif (form[vertKey]) body.vertical = form[vertKey];\nif (handle) body.profile_picture_handle = handle;\n\nreturn [{ json: { body } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3680,
+        -80
+      ],
+      "id": "1a0a5cc1-5be1-445d-9582-646b8d6df5db",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $(\"Select Phone\").item.json[\"Phone Number\"].split(\" | \")[1] }}/whatsapp_business_profile",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3888,
+        -80
+      ],
+      "id": "23831657-6e7c-42aa-80e6-be9e587b84e7",
+      "name": "Set Profile Data",
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {
+    "List Businesses": [
+      {
+        "json": {
+          "data": [
+            {
+              "id": "2337052240062279",
+              "name": "Edelga"
+            },
+            {
+              "id": "1273058810232951",
+              "name": "JBP Capital Investments GmbH"
+            },
+            {
+              "id": "1111394823205995",
+              "name": "Markenbuilder"
+            },
+            {
+              "id": "824805849466700",
+              "name": "Stardawn AI"
+            },
+            {
+              "id": "377014559477428",
+              "name": "KENF Safety & Security GmbH"
+            }
+          ],
+          "paging": {
+            "cursors": {
+              "before": "QVFIU1ZAmNmtzdFJldzR4aF9ER2doZAllMb3ZAGRVhuQkpkQUc3a2dVaTB6MnV6R0VQdHAtdEdmaWhZAaHpNN1lwdU5LZAVQxT2xMeTVVUmltLWhENjVJdDlHdzNB",
+              "after": "QVFIU3kxWDc5M3JaSGVPWkxqQm9xSXctNk9pamEzMDJGbWpIUml6QlYtTUZA4OVhGc2RZAbDhpTG1wM2lLTDdNbFpXdEY5MmFDMzNtblNKSHpzMEtEbzM3dFNn"
+            }
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "On form submission": [
+      {
+        "json": {
+          "submittedAt": "2026-04-23T15:27:31.896Z",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Get Token": [
+      {
+        "json": {
+          "id": 1,
+          "name": "jim_user_token",
+          "access_token": "EAAMVBPOouEcBRWFC9rl8OZCZC9gisxjESC2N6umt8wbvRTXcBBbyZAMnhkyQ2BYC0edjOWZBf32duRyIs0ozn4e5zdGNNZAHauC5LZAdGnpDHdpvwa0CCrdcTOK9KEh0pfZBojsh9nnoYZCL903JIQPUFZBXZAgWqZAUiNi5J4qgNbiFKyB3gy6i6MJoECZBOWG4qksX",
+          "expires_at": "2026-06-22T14:46:22.914+00:00",
+          "updated_at": "2026-04-23T14:46:22.925+00:00"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Token": {
+      "main": [
+        [
+          {
+            "node": "List Businesses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Businesses": {
+      "main": [
+        [
+          {
+            "node": "Select Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Business": {
+      "main": [
+        [
+          {
+            "node": "List WABAs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List WABAs": {
+      "main": [
+        [
+          {
+            "node": "Select WABA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select WABA": {
+      "main": [
+        [
+          {
+            "node": "List Phone Numbers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Phone Numbers": {
+      "main": [
+        [
+          {
+            "node": "Select Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Upload Session": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload Binary": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract File Info": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Upload Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Upload Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "too Large?": {
+      "main": [
+        [
+          {
+            "node": "Done1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Select Phone": {
+      "main": [
+        [
+          {
+            "node": "Get Current Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Profile": {
+      "main": [
+        [
+          {
+            "node": "Prep Defaults",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep Defaults": {
+      "main": [
+        [
+          {
+            "node": "Edit Profile Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Profile Fields": {
+      "main": [
+        [
+          {
+            "node": "Has Image?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Image?": {
+      "main": [
+        [
+          {
+            "node": "Extract File Info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Set Profile Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Profile Data": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "too Large?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c859f257-c392-4b5d-80ed-53af11c2f641",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a767a413ba2ceca30a63afb84f720da909d28884ca1a1a86a90af1cf7d495c1"
+  },
+  "id": "QlBLkszR6xqMHL1J",
+  "tags": []
+}
