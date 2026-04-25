@@ -228,6 +228,34 @@ Go back to the [developers.facebook.com](https://developers.facebook.com) page, 
 
 <br>
 
+<br>
+
+### 2.1.1 Troubleshooting: Number stuck on "Pending" / "Unregistered"
+
+If after completing all steps above your phone number remains on **Pending** in the WhatsApp Manager, and the API Setup dropdown shows **"This number is unregistered"** even though SMS verification was successful, the cause is usually a stale permission link between your System User and the WhatsApp Business Account.
+
+This is especially common when the WABA was added to the System User *before* completing the phone number verification — Meta does not always propagate the permissions correctly.
+
+> ⚠️ **Important:** This is NOT a problem with your display name review. Display name review runs in parallel and does not block API registration.
+
+**The fix (re-assign the asset to force a permission refresh):**
+<img width="771" height="912" alt="image" src="https://github.com/user-attachments/assets/2120c7fe-783d-4897-82fb-fceb8307be63" />
+
+1. Go to [business.facebook.com](https://business.facebook.com) → **Users** → **System Users** → select your System User.
+2. Find the affected **WhatsApp Account** in the asset list and **remove** it (trash can icon).
+3. Click **Add Assets** → **WhatsApp Accounts** → re-select the same account → enable **Full control** → **Save**.
+4. Go back to [developers.facebook.com](https://developers.facebook.com) → your App → **WhatsApp** → **API Setup**.
+5. Hard refresh the page with **Ctrl + F5** (or **Cmd + Shift + R** on macOS).
+6. The number should now be selectable in the **From** dropdown without the "unregistered" label, and the WhatsApp Manager status should switch to **Connected**.
+
+> 💡 **Tip:** If it still doesn't work after the hard refresh, try the same flow in an incognito window — Meta's UI sometimes caches the old asset state aggressively in the regular browser session.
+
+
+<br>
+<br>
+
+
+
 ### 2.2 Official Business Account Checkmark
 
 The last thing we are going to do:
