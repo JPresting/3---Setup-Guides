@@ -14,44 +14,12 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.5,
       "position": [
-        32,
-        -64
+        -384,
+        -112
       ],
       "id": "fee6dd83-76e5-47ca-ab25-8da2cebffc09",
       "name": "On form submission",
       "webhookId": "a1ac27a0-97ee-4e77-a86e-2034b211f8cd"
-    },
-    {
-      "parameters": {
-        "useCustomSchema": true,
-        "schema": "stardawn_config",
-        "operation": "getAll",
-        "tableId": "meta_tokens",
-        "returnAll": true,
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "name",
-              "condition": "eq",
-              "keyValue": "jim_user_token"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        240,
-        -64
-      ],
-      "id": "25acf03b-3474-428a-aa9e-a2d0d4640d41",
-      "name": "Get Token",
-      "credentials": {
-        "supabaseApi": {
-          "id": "3WuNt6TomqxPLUeg",
-          "name": "Internal Oracle1"
-        }
-      }
     },
     {
       "parameters": {
@@ -79,7 +47,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        448,
+        224,
         -64
       ],
       "id": "13fd7d5a-9938-409e-8dd7-85b7ebd2c87a",
@@ -96,7 +64,7 @@
       "type": "n8n-nodes-base.form",
       "typeVersion": 2.5,
       "position": [
-        656,
+        384,
         -64
       ],
       "id": "373ad66f-73bd-4cf4-8d1c-56c1b9f44820",
@@ -105,31 +73,34 @@
     },
     {
       "parameters": {
-        "url": "=https://graph.facebook.com/v22.0/{{ $json[\"Business Portfolio\"].split(\" | \")[1] }}/owned_whatsapp_business_accounts",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Select Business').first().json['Business Portfolio'].split(' | ')[1] }}/owned_whatsapp_business_accounts",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             {
               "name": "fields",
               "value": "id,name"
-            }
-          ]
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+            },
             {
-              "name": "Authorization",
-              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+              "name": "limit",
+              "value": "200"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $json.access_token }}"
             }
           ]
         },
-        "options": {}
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        864,
+        848,
         -64
       ],
       "id": "f3a1c5e3-7eb8-4db9-ad00-e8d7200cf52d",
@@ -146,8 +117,8 @@
       "type": "n8n-nodes-base.form",
       "typeVersion": 2.5,
       "position": [
-        1088,
-        -64
+        1040,
+        -240
       ],
       "id": "5b63d405-0a1e-4f04-86c1-c15a6ec0da92",
       "name": "Select WABA",
@@ -170,7 +141,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+              "value": "=Bearer {{ $('Get System Token').item.json.access_token }}"
             }
           ]
         },
@@ -211,7 +182,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+              "value": "=Bearer {{ $('Get System Token').item.json.access_token }}"
             }
           ]
         },
@@ -235,7 +206,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=OAuth {{ $(\"Get Token\").item.json.access_token }}"
+              "value": "=OAuth {{ $('Get System Token').item.json.access_token }}"
             },
             {
               "name": "file_offset",
@@ -391,7 +362,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+              "value": "=Bearer {{ $('Get System Token').item.json.access_token }}"
             }
           ]
         },
@@ -498,7 +469,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $(\"Get Token\").item.json.access_token }}"
+              "value": "=Bearer {{ $('Get System Token').item.json.access_token }}"
             }
           ]
         },
@@ -520,50 +491,159 @@
       "id": "23831657-6e7c-42aa-80e6-be9e587b84e7",
       "name": "Set Profile Data",
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "schema": "stardawn_config",
+        "operation": "getAll",
+        "tableId": "meta_tokens",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "name",
+              "condition": "eq",
+              "keyValue": "jim_user_token"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -224
+      ],
+      "id": "25acf03b-3474-428a-aa9e-a2d0d4640d41",
+      "name": "Get Current Token",
+      "credentials": {
+        "supabaseApi": {
+          "id": "3WuNt6TomqxPLUeg",
+          "name": "Internal Oracle1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "schema": "stardawn_config",
+        "operation": "update",
+        "tableId": "meta_tokens",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "name",
+              "condition": "eq",
+              "keyValue": "jim_user_token"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "access_token",
+              "fieldValue": "={{ $json.access_token }}"
+            },
+            {
+              "fieldId": "expires_at",
+              "fieldValue": "={{ $now.plus({days: 60}).toISO() }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -320
+      ],
+      "id": "a6617f9c-f108-45d9-9c9c-87ace853a8ec",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "3WuNt6TomqxPLUeg",
+          "name": "Internal Oracle1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "schema": "stardawn_config",
+        "operation": "getAll",
+        "tableId": "meta_tokens",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "portfolio_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Select Business').item.json['Business Portfolio'].split(' | ')[1] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        592,
+        -64
+      ],
+      "id": "4c49b9a5-7299-490f-b520-f0bad754283c",
+      "name": "Get System Token",
+      "credentials": {
+        "supabaseApi": {
+          "id": "3WuNt6TomqxPLUeg",
+          "name": "Internal Oracle1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v22.0/oauth/access_token",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "fb_exchange_token"
+            },
+            {
+              "name": "client_id",
+              "value": "867535942105159"
+            },
+            {
+              "name": "client_secret",
+              "value": "287ce44874959866cfa747d153c466cc"
+            },
+            {
+              "name": "fb_exchange_token",
+              "value": "={{ $('Get Current Token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        96,
+        -320
+      ],
+      "id": "e72575f0-d6cd-4289-870f-1abe405ada7d",
+      "name": "Get Access Token for Business.me Profiles"
     }
   ],
   "pinData": {
-    "List Businesses": [
-      {
-        "json": {
-          "data": [
-            {
-              "id": "2337052240062279",
-              "name": "Edelga"
-            },
-            {
-              "id": "1273058810232951",
-              "name": "JBP Capital Investments GmbH"
-            },
-            {
-              "id": "1111394823205995",
-              "name": "Markenbuilder"
-            },
-            {
-              "id": "824805849466700",
-              "name": "Stardawn AI"
-            },
-            {
-              "id": "377014559477428",
-              "name": "KENF Safety & Security GmbH"
-            }
-          ],
-          "paging": {
-            "cursors": {
-              "before": "QVFIU1ZAmNmtzdFJldzR4aF9ER2doZAllMb3ZAGRVhuQkpkQUc3a2dVaTB6MnV6R0VQdHAtdEdmaWhZAaHpNN1lwdU5LZAVQxT2xMeTVVUmltLWhENjVJdDlHdzNB",
-              "after": "QVFIU3kxWDc5M3JaSGVPWkxqQm9xSXctNk9pamEzMDJGbWpIUml6QlYtTUZA4OVhGc2RZAbDhpTG1wM2lLTDdNbFpXdEY5MmFDMzNtblNKSHpzMEtEbzM3dFNn"
-            }
-          }
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ],
     "On form submission": [
       {
         "json": {
-          "submittedAt": "2026-04-23T15:27:31.896Z",
+          "submittedAt": "2026-04-26T15:06:16.732Z",
           "formMode": "test"
         },
         "pairedItem": {
@@ -571,14 +651,24 @@
         }
       }
     ],
-    "Get Token": [
+    "Select WABA": [
       {
         "json": {
-          "id": 1,
-          "name": "jim_user_token",
-          "access_token": "EAAMVBPOouEcBRWFC9rl8OZCZC9gisxjESC2N6umt8wbvRTXcBBbyZAMnhkyQ2BYC0edjOWZBf32duRyIs0ozn4e5zdGNNZAHauC5LZAdGnpDHdpvwa0CCrdcTOK9KEh0pfZBojsh9nnoYZCL903JIQPUFZBXZAgWqZAUiNi5J4qgNbiFKyB3gy6i6MJoECZBOWG4qksX",
-          "expires_at": "2026-06-22T14:46:22.914+00:00",
-          "updated_at": "2026-04-23T14:46:22.925+00:00"
+          "WhatsApp Business Account": "Dawni | 2137568486642775",
+          "submittedAt": "2026-04-26T16:26:43.328Z",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Select Business": [
+      {
+        "json": {
+          "Business Portfolio": "Stardawn AI | 824805849466700",
+          "submittedAt": "2026-04-26T16:26:37.038Z",
+          "formMode": "test"
         },
         "pairedItem": {
           "item": 0
@@ -591,18 +681,7 @@
       "main": [
         [
           {
-            "node": "Get Token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Token": {
-      "main": [
-        [
-          {
-            "node": "List Businesses",
+            "node": "Get Current Token",
             "type": "main",
             "index": 0
           }
@@ -624,7 +703,7 @@
       "main": [
         [
           {
-            "node": "List WABAs",
+            "node": "Get System Token",
             "type": "main",
             "index": 0
           }
@@ -815,6 +894,50 @@
           }
         ]
       ]
+    },
+    "Get Current Token": {
+      "main": [
+        [
+          {
+            "node": "Get Access Token for Business.me Profiles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "List Businesses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get System Token": {
+      "main": [
+        [
+          {
+            "node": "List WABAs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Access Token for Business.me Profiles": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -822,7 +945,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "c859f257-c392-4b5d-80ed-53af11c2f641",
+  "versionId": "9b183f0b-defa-4b9c-bdda-cc7b402bd3fb",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4a767a413ba2ceca30a63afb84f720da909d28884ca1a1a86a90af1cf7d495c1"

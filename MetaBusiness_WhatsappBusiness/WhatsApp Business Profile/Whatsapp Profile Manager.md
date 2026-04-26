@@ -1,6 +1,8 @@
 # WhatsApp Business Profile Manager
 
-A reliable, API-driven approach to managing **WhatsApp Business Profile** information across multiple Business Portfolios — including the profile fields the official Meta Business Manager UI handles inconsistently or fails on entirely.
+A reliable, API-driven approach to managing **WhatsApp Business Profile** information across multiple Business Portfolios — bypassing the Meta Business Manager UI which handles certain profile operations inconsistently or fails on them entirely.
+
+This document covers the **architecture, one-time manual setup, and database layout**. The operational flow (form, token routing, API calls, upload chain) is implemented in the n8n workflow `Change WhatsApp WABA Profile Info`. Refer to that workflow for runtime details.
 
 ---
 
@@ -8,14 +10,13 @@ A reliable, API-driven approach to managing **WhatsApp Business Profile** inform
 
 - [The Problem](#the-problem)
 - [The Solution](#the-solution)
-- [Editable Profile Fields](#editable-profile-fields)
-- [Architecture](#architecture)
-- [Token Setup](#token-setup)
+- [Token Architecture](#token-architecture)
+- [One-Time Setup](#one-time-setup)
+  - [Part A — User Token (Portfolio Discovery)](#part-a--user-token-portfolio-discovery)
+  - [Part B — System User Token per Portfolio](#part-b--system-user-token-per-portfolio)
 - [Database Schema](#database-schema)
-- [Token Refresh Job](#token-refresh-job)
-- [Reading the Current Profile](#reading-the-current-profile)
-- [Updating Profile Fields](#updating-profile-fields)
-- [Profile Picture Upload Chain](#profile-picture-upload-chain)
+- [Operational Flow](#operational-flow)
+- [API Reference](#api-reference)
 - [Recovery](#recovery)
 - [Multi-Tenant Considerations](#multi-tenant-considerations)
 - [References](#references)
@@ -24,149 +25,88 @@ A reliable, API-driven approach to managing **WhatsApp Business Profile** inform
 
 ## The Problem
 
-Updating WhatsApp Business Profile information through the official Meta Business Manager UI is unreliable. Common failure modes observed in production:
+Updating WhatsApp Business Profile information through the Meta Business Manager UI is unreliable:
 
-- **Profile picture uploads fail silently or with cryptic errors.** The UI accepts the file, shows a spinner, and either reverts to the previous image or throws CORS errors in the browser console (`Access to XMLHttpRequest at 'https://rupload.facebook.com/...' has been blocked by CORS policy`). The picture never reaches the WhatsApp account.
-- **Long-form fields (description, address) randomly truncate or reject input** with non-actionable validation messages.
-- **Multi-account workflows are slow.** Switching between Business Portfolios, WABAs, and phone numbers in the UI requires repeated drilldowns. Updating the same field on multiple numbers means doing it manually for each.
-- **No batch operations.** Setting the same `about` text on five numbers takes five round-trips through the UI.
-- **Image format quirks are not surfaced.** Transparent PNGs render as solid black or white in WhatsApp. The UI accepts them without warning.
+- **Profile picture uploads fail silently or with CORS errors.** The UI accepts the file but the picture never reaches the WhatsApp account.
+- **Long-form fields (description, address) randomly truncate** with non-actionable validation messages.
+- **Multi-account workflows are slow.** Every Portfolio → WABA → phone number drilldown is manual.
+- **No batch operations.** Setting the same `about` text on five numbers takes five UI round-trips.
+- **Image format quirks are not surfaced.** Transparent PNGs render as solid black or white. The UI accepts them without warning.
 
-The Graph API path bypasses the UI entirely, surfaces real error messages, and supports clean automation across any number of phone numbers.
+The Graph API path bypasses the UI entirely, surfaces real error messages, and supports clean automation.
+
+---
 
 ## The Solution
 
-A direct integration against the Meta Graph API endpoint `POST /{PHONE_NUMBER_ID}/whatsapp_business_profile`, fronted by:
+A direct integration against `POST /{PHONE_NUMBER_ID}/whatsapp_business_profile`, fronted by:
 
-1. A **single long-lived User Access Token** with cross-Portfolio scope, stored in PostgreSQL
-2. A **scheduled refresh job** that keeps the token alive indefinitely
-3. **Workflows or scripts** that read the token on demand and call the API
-
-This document describes both the API contract and a reference deployment.
+1. A **hybrid token architecture** — one Long-Lived User Token for cross-Portfolio discovery, plus one permanent Admin System User Token per Business Portfolio for WABA-level operations
+2. A **scheduled refresh job** that keeps the User Token alive
+3. An **n8n workflow** that selects the correct token by Portfolio and orchestrates reads, writes, and the profile picture upload chain
 
 ---
 
-## Editable Profile Fields
+## Token Architecture
 
-All fields are managed through one endpoint:
+A naive single-token design breaks: User Tokens carry a frozen `granular_scopes` snapshot of WABA IDs at generation time. New WABAs added to a Portfolio after the token was issued never appear in it, even after `fb_exchange_token` refreshes — refresh extends lifetime, not scope.
 
-```
-POST /{PHONE_NUMBER_ID}/whatsapp_business_profile
-```
+The fix is two-tier:
 
-| Field | Description | Limit |
-|---|---|---|
-| `about` | Status text shown beneath the business name | 139 characters |
-| `address` | Business address | 256 characters |
-| `description` | Long business description | 512 characters |
-| `email` | Contact email | 128 characters |
-| `websites` | Up to two URLs | 256 characters each |
-| `vertical` | Industry category (enum) | See list below |
-| `profile_picture_handle` | Reference returned by the upload chain | — |
+| Token Type | Stored As | Used For | Lifetime | Sees Future WABAs? |
+|---|---|---|---|---|
+| **Long-Lived User Token** | `<user_token>` | `GET /me/businesses` (Portfolio listing) | 60 days, refreshed every 30 | N/A — only enumerates Portfolios |
+| **Admin System User Token** (one per Portfolio) | `system_token_<portfolio>` | All WABA-level reads and writes | Never expires | **Yes** — automatic |
 
-Partial updates are supported. Send only the fields being changed; omitted fields retain their existing value.
+### Why both are needed
 
-### `vertical` Enum
+System User Tokens cannot answer `GET /me/businesses`. A System User exists *inside* a single Business Portfolio and has no cross-Portfolio scope. Only a User Token attached to the administrator's Facebook account can enumerate the Portfolios that account administrates.
 
-`UNDEFINED`, `OTHER`, `AUTO`, `BEAUTY`, `APPAREL`, `EDU`, `ENTERTAIN`, `EVENT_PLAN`, `FINANCE`, `GROCERY`, `GOVT`, `HOTEL`, `HEALTH`, `NONPROFIT`, `PROF_SERVICES`, `RETAIL`, `TRAVEL`, `RESTAURANT`, `NOT_A_BIZ`
+Conversely, the User Token's frozen WABA snapshot makes it unreliable for listing or operating on WABAs. The same `GET /{BUSINESS_ID}/owned_whatsapp_business_accounts` call returns the full current-and-future list when made with a Portfolio's Admin System User Token.
 
-> Once `vertical` is set to a non-empty value it cannot be cleared back to empty. It can only be changed to a different enum value.
+### Why Admin System Users see future WABAs
+
+Per Meta documentation: *"By default, admin system users have full access to all WABAs and their assets owned by or shared with you or your business portfolio … without having to manually grant business asset access to each asset whenever it is created, or shared with your business portfolio."*
+
+Mechanism: System User Tokens are not scoped lists. The token references the System User identity. On every API call Meta evaluates the System User's current asset access live. New WABAs created in or shared with the Portfolio fall under the Admin's default coverage immediately.
 
 ---
 
-## Architecture
+## One-Time Setup
 
-```
-┌──────────────────────────────┐
-│  Operator                    │
-│  (form / script / workflow)  │
-└──────────────────────────────┘
-              │
-              │  1. Read token
-              ▼
-┌──────────────────────────────┐
-│  PostgreSQL (Supabase)       │
-│  meta_tokens                 │
-└──────────────────────────────┘
-              │
-              │  2. Authorization: Bearer <token>
-              ▼
-┌──────────────────────────────┐
-│  Meta Graph API              │
-│  /whatsapp_business_profile  │
-└──────────────────────────────┘
+### Part A — User Token (Portfolio Discovery)
 
-  Independent loop ─────────────────────────┐
-  ┌──────────────────────────┐              │
-  │  Refresh Job (every 30d) │ ── refreshes token
-  │  fb_exchange_token       │
-  └──────────────────────────┘
-```
+This token answers a single question: which Business Portfolios the administrator's Facebook account administrates. Generated once, refreshed forever.
 
-The token layer is decoupled from consumption. Any number of workflows can read the token concurrently. A single refresh job keeps it valid.
+#### A.1 — Designate an anchor app
 
----
-
-## Token Setup
-
-### Why a Long-Lived User Access Token
-
-Meta offers two backend token types:
-
-| Token Type | Scope | Lifetime |
-|---|---|---|
-| **System User Token** | One Business Portfolio | Non-expiring |
-| **User Access Token (long-lived)** | All Portfolios the user administrates | 60 days, renewable |
-
-For administrating multiple Business Portfolios from one credential, the User Token is the simpler model. The 60-day lifetime is solved by a refresh job that calls `fb_exchange_token` every 30 days.
-
-### Step 1 — Designate an Anchor App
-
-Pick one Meta App at `developers.facebook.com` to serve as the long-term anchor.
+Pick one Meta App at `developers.facebook.com` to serve as the anchor for the User Token.
 
 > **The anchor app must never be deleted.** The User Token is bound to the App ID under which it was generated, and refresh requires the corresponding `client_id` and `client_secret`. Deletion permanently invalidates the token.
 
-Required values:
-
-- `<APP_ID>` — App Settings → Basic
-- `<APP_SECRET>` — same screen, requires re-auth to reveal
-
-### Step 2 — Generate the Initial Token
+#### A.2 — Generate short-lived token
 
 In the [Graph API Explorer](https://developers.facebook.com/tools/explorer/):
 
 - **Meta App:** the anchor app
 - **User or Page:** User Token
-- **Permissions:**
-  - `business_management`
-  - `whatsapp_business_management`
-  - `whatsapp_business_messaging`
+- **Permissions:** `business_management`, `whatsapp_business_management`, `whatsapp_business_messaging`
 
-Click **Generate Access Token**, confirm in the Facebook login popup, and copy the resulting short-lived token.
+Click **Generate Access Token**, confirm in the OAuth popup, copy the result.
 
-### Step 3 — Exchange for Long-Lived Token
+#### A.3 — Exchange for long-lived
 
 ```bash
 curl -G "https://graph.facebook.com/v22.0/oauth/access_token" \
   --data-urlencode "grant_type=fb_exchange_token" \
-  --data-urlencode "client_id=<APP_ID>" \
-  --data-urlencode "client_secret=<APP_SECRET>" \
+  --data-urlencode "client_id=<USER_TOKEN_APP_ID>" \
+  --data-urlencode "client_secret=<USER_TOKEN_APP_SECRET>" \
   --data-urlencode "fb_exchange_token=<SHORT_LIVED_TOKEN>"
 ```
 
-Response:
+`expires_in: 5184000` = 60 days, the maximum.
 
-```json
-{
-  "access_token": "EAA...",
-  "token_type": "bearer",
-  "expires_in": 5184000
-}
-```
-
-`5184000` seconds = 60 days, the maximum Meta provides.
-
-### Step 4 — Verify
+#### A.4 — Verify
 
 ```bash
 curl -G "https://graph.facebook.com/v22.0/me/businesses" \
@@ -174,13 +114,72 @@ curl -G "https://graph.facebook.com/v22.0/me/businesses" \
   --data-urlencode "fields=id,name"
 ```
 
-Returns all Business Portfolios the Facebook user administrates.
+Should list all Portfolios the administrator's account administrates.
+
+---
+
+### Part B — System User Token per Portfolio
+
+Repeat this section once per Business Portfolio. Each Portfolio needs its own System User and its own permanent token.
+
+#### B.1 — Designate an anchor app per Portfolio
+
+Each Portfolio has at least one Meta App associated with it (Business Settings → Accounts → Apps). Pick one as the System User Token's anchor.
+
+> **This anchor app must never be deleted either.** Generated System User Tokens stay valid only as long as their generating app exists.
+
+#### B.2 — Create or identify the System User
+
+`business.facebook.com` → top-left dropdown → select Portfolio → Settings → Users → **System Users**
+
+If an Admin System User already exists, reuse it. Otherwise click **Add**:
+
+- Name: descriptive (e.g. `<portfolio>-api-bot`)
+- Role: **Admin** — required for automatic future-WABA coverage
+- Click **Create System User**
+
+#### B.3 — Assign the anchor app to the System User
+
+This is the step that fails silently in the Meta UI when skipped. The **Generate New Token** button will show *"No permissions available — Assign an app role to the system user or select another app to continue"* with no further explanation.
+
+1. Click the System User → right-hand detail panel
+2. **Add Assets**
+3. Asset type column: **Apps**
+4. Asset selection column: check the Portfolio's anchor app
+5. Permissions column → **Full Control** → toggle **Manage app** to ON
+6. **Assign Assets**
+7. Reload — permission propagation takes a few seconds
+
+#### B.4 — Verify WABA coverage
+
+In the System User detail panel, **Assigned Assets** tab → **WhatsApp accounts** section. Confirm all current WABAs of the Portfolio are listed. If any are missing, the Admin's default coverage has been overridden somewhere — fix at the WABA level or assign the missing WABAs explicitly (Add Assets → WhatsApp accounts → Full Control).
+
+#### B.5 — Generate the token
+
+In the System User detail panel → **Generate New Token**:
+
+- **App:** the anchor app from B.1
+- **Expiration:** **Never**
+- **Permissions:** `whatsapp_business_management`, `whatsapp_business_messaging`, `business_management`
+
+Click **Generate Token**. **Copy immediately** — shown only once.
+
+#### B.6 — Smoke test
+
+```bash
+curl -G "https://graph.facebook.com/v22.0/<PORTFOLIO_ID>/owned_whatsapp_business_accounts" \
+  -H "Authorization: Bearer <SYSTEM_USER_TOKEN>" \
+  --data-urlencode "fields=id,name" \
+  --data-urlencode "limit=200"
+```
+
+All Portfolio WABAs should appear. If the count differs from the Business Manager UI, return to B.4 and reconcile asset access before storing the token.
 
 ---
 
 ## Database Schema
 
-### Schema Setup
+### Schema and grants
 
 ```sql
 CREATE SCHEMA IF NOT EXISTS <config_schema>;
@@ -205,342 +204,203 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA <config_schema>
 
 ```sql
 CREATE TABLE <config_schema>.meta_tokens (
-  id           serial PRIMARY KEY,
-  name         text UNIQUE NOT NULL,
-  access_token text NOT NULL,
-  expires_at   timestamptz NOT NULL,
-  updated_at   timestamptz DEFAULT now()
+  id              serial PRIMARY KEY,
+  name            text UNIQUE NOT NULL,
+  access_token    text,                       -- nullable: placeholder rows for Portfolios without WABAs yet
+  expires_at      timestamptz,                -- nullable: System User tokens never expire
+  updated_at      timestamptz DEFAULT now(),
+  portfolio_id    text,                       -- Meta Business Portfolio ID
+  portfolio_name  text,                       -- human-readable Portfolio name
+  app_name        text                        -- anchor app — see comment
 );
+
+COMMENT ON COLUMN <config_schema>.meta_tokens.app_name
+  IS 'Meta App that generated this token — must never be deleted, or the token dies';
 ```
 
-### Initial Insert
+Both `access_token` and `expires_at` are nullable:
+
+- `expires_at IS NULL` → permanent token (System User), no refresh needed
+- `access_token IS NULL` → Portfolio reserved for a future WABA that does not exist yet (e.g. number being provisioned). Row holds Portfolio metadata; token added once available.
+
+### Initial inserts
 
 ```sql
-INSERT INTO <config_schema>.meta_tokens (name, access_token, expires_at)
+-- User Token
+INSERT INTO <config_schema>.meta_tokens
+  (name, access_token, portfolio_id, portfolio_name, app_name, expires_at, updated_at)
 VALUES (
-  '<token_identifier>',
-  '<LONG_LIVED_TOKEN>',
-  now() + interval '60 days'
+  '<user_token_name>',
+  '<LONG_LIVED_USER_TOKEN>',
+  NULL,
+  'ALL (User Token spans portfolios)',
+  '<USER_TOKEN_APP_NAME>',
+  now() + interval '60 days',
+  now()
 );
+
+-- One row per Portfolio (System User Tokens)
+INSERT INTO <config_schema>.meta_tokens
+  (name, access_token, portfolio_id, portfolio_name, app_name, expires_at, updated_at)
+VALUES
+  ('system_token_<portfolio_a>', '<TOKEN_A>', '<ID_A>', '<Name A>', '<App A>', NULL, now()),
+  ('system_token_<portfolio_b>', '<TOKEN_B>', '<ID_B>', '<Name B>', '<App B>', NULL, now());
+
+-- Placeholder row (Portfolio without WABA yet)
+INSERT INTO <config_schema>.meta_tokens
+  (name, access_token, portfolio_id, portfolio_name, app_name, expires_at, updated_at)
+VALUES
+  ('system_token_<portfolio_pending>',
+   NULL,
+   '<PENDING_ID>', '<Pending Name>', '<Anchor App>', NULL, now());
 ```
 
-### PostgREST Exposure
+When the pending Portfolio gets its first WABA, generate the System User Token (Part B) and update:
+
+```sql
+UPDATE <config_schema>.meta_tokens
+SET access_token = '<NEW_TOKEN>', updated_at = now()
+WHERE name = 'system_token_<portfolio_pending>';
+```
+
+### PostgREST exposure
 
 For Supabase deployments, add `<config_schema>` to the `PGRST_DB_SCHEMAS` environment variable and restart the stack.
 
-### Encryption (Optional)
+### Encryption (optional)
 
-For internal admin use, plain-text storage behind a hardened service role is acceptable. For multi-tenant production deployments, encrypt the `access_token` column using `pgsodium` or store in Supabase Vault.
-
----
-
-## Token Refresh Job
-
-Run every **30 days** to maintain a 30-day buffer before expiry.
-
-### Reference Implementation (Bash + cron)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-SUPABASE_URL="https://<supabase_host>"
-SERVICE_KEY="<SUPABASE_SERVICE_ROLE_KEY>"
-APP_ID="<APP_ID>"
-APP_SECRET="<APP_SECRET>"
-TOKEN_NAME="<token_identifier>"
-SCHEMA="<config_schema>"
-
-CURRENT_TOKEN=$(curl -s -X GET \
-  "$SUPABASE_URL/rest/v1/meta_tokens?name=eq.$TOKEN_NAME&select=access_token" \
-  -H "apikey: $SERVICE_KEY" \
-  -H "Authorization: Bearer $SERVICE_KEY" \
-  -H "Accept-Profile: $SCHEMA" \
-  | jq -r '.[0].access_token')
-
-NEW_TOKEN=$(curl -sG "https://graph.facebook.com/v22.0/oauth/access_token" \
-  --data-urlencode "grant_type=fb_exchange_token" \
-  --data-urlencode "client_id=$APP_ID" \
-  --data-urlencode "client_secret=$APP_SECRET" \
-  --data-urlencode "fb_exchange_token=$CURRENT_TOKEN" \
-  | jq -r '.access_token')
-
-if [[ -z "$NEW_TOKEN" || "$NEW_TOKEN" == "null" ]]; then
-  echo "[$(date)] FAIL: token exchange returned no value"
-  exit 1
-fi
-
-curl -s -X PATCH \
-  "$SUPABASE_URL/rest/v1/meta_tokens?name=eq.$TOKEN_NAME" \
-  -H "apikey: $SERVICE_KEY" \
-  -H "Authorization: Bearer $SERVICE_KEY" \
-  -H "Content-Profile: $SCHEMA" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"access_token\": \"$NEW_TOKEN\",
-    \"expires_at\": \"$(date -u -d '+60 days' +%Y-%m-%dT%H:%M:%SZ)\",
-    \"updated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
-  }" > /dev/null
-
-echo "[$(date)] OK: token refreshed"
-```
-
-```
-0 3 1 * * /opt/scripts/refresh_meta_token.sh >> /var/log/meta-token.log 2>&1
-```
-
-### Reference Implementation (n8n)
-
-```
-Schedule Trigger (every 30 days)
-    │
-    ▼
-Supabase: SELECT access_token FROM meta_tokens WHERE name = '<token_identifier>'
-    │
-    ▼
-HTTP GET /v22.0/oauth/access_token
-    grant_type        = fb_exchange_token
-    client_id         = <APP_ID>
-    client_secret     = <APP_SECRET>
-    fb_exchange_token = <current_token>
-    │
-    ▼
-Supabase: UPDATE meta_tokens
-   SET access_token = <new_token>,
-       expires_at   = now() + interval '60 days',
-       updated_at   = now()
- WHERE name = '<token_identifier>'
-```
-
-### Failure Handling
-
-Send notifications on failure (Telegram, Slack, email). A failed refresh leaves approximately 30 days to intervene before the token expires. An expired token requires the [Recovery](#recovery) procedure.
+Plain-text storage behind a hardened service role is acceptable for internal admin use. For multi-tenant deployments encrypt `access_token` with `pgsodium` or store in Supabase Vault.
 
 ---
 
-## Reading the Current Profile
+## Operational Flow
 
-Always read first before updating, both to confirm access and to provide UI defaults if surfacing the editor to an operator.
+The runtime logic — form-based Portfolio/WABA/phone selection, token routing, profile read/write, profile picture upload chain — is implemented in n8n:
 
-```bash
-curl -G "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/whatsapp_business_profile" \
-  -H "Authorization: Bearer <TOKEN>" \
-  --data-urlencode "fields=about,address,description,email,profile_picture_url,websites,vertical"
+- **`Change WhatsApp WABA Profile Info`** — interactive form for editing any profile field on any phone number across all Portfolios. Pulls the User Token to list Portfolios, swaps in the matching System User Token after Portfolio selection, and uses that for every subsequent WABA-level call.
+- **`WhatsApp Keep Token Online`** — scheduled refresh of the User Token only. System User Tokens are permanent and not touched by this job.
+
+High-level flow:
+
+```
+Form submit
+  → refresh User Token (fb_exchange_token)
+  → list Portfolios via /me/businesses (User Token)
+  → operator picks Portfolio
+  → look up matching system_token by portfolio_id
+  → list WABAs / phone numbers / current profile (System Token)
+  → operator edits fields, optionally uploads new picture
+  → POST /whatsapp_business_profile (System Token)
 ```
 
-Response shape:
-
-```json
-{
-  "data": [
-    {
-      "messaging_product": "whatsapp",
-      "about": "...",
-      "address": "...",
-      "description": "...",
-      "email": "...",
-      "profile_picture_url": "https://pps.whatsapp.net/...",
-      "websites": ["https://..."],
-      "vertical": "PROF_SERVICES"
-    }
-  ]
-}
-```
-
-> Note the response is wrapped in a `data` array of length 1, not a flat object.
+For node-by-node configuration, see the workflow JSON.
 
 ---
 
-## Updating Profile Fields
+## API Reference
 
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/whatsapp_business_profile" \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messaging_product": "whatsapp",
-    "about": "Automating Efficiency",
-    "description": "...",
-    "email": "info@example.com",
-    "websites": ["https://example.com"],
-    "vertical": "PROF_SERVICES"
-  }'
+For ad-hoc scripting outside n8n, the relevant endpoints:
+
+### Editable fields
+
+```
+POST /v22.0/{PHONE_NUMBER_ID}/whatsapp_business_profile
 ```
 
-Response:
+| Field | Limit |
+|---|---|
+| `about` | 139 chars |
+| `address` | 256 chars |
+| `description` | 512 chars |
+| `email` | 128 chars |
+| `websites` | 2 entries, 256 chars each |
+| `vertical` | enum (see below) |
+| `profile_picture_handle` | from upload chain |
 
-```json
-{ "success": true }
+`messaging_product: "whatsapp"` is mandatory on every request. Partial updates are supported — omitted fields retain existing values.
+
+`vertical` enum: `UNDEFINED`, `OTHER`, `AUTO`, `BEAUTY`, `APPAREL`, `EDU`, `ENTERTAIN`, `EVENT_PLAN`, `FINANCE`, `GROCERY`, `GOVT`, `HOTEL`, `HEALTH`, `NONPROFIT`, `PROF_SERVICES`, `RETAIL`, `TRAVEL`, `RESTAURANT`, `NOT_A_BIZ`. Once set to a non-empty value `vertical` cannot be cleared, only changed.
+
+### Read profile
+
+```
+GET /v22.0/{PHONE_NUMBER_ID}/whatsapp_business_profile
+  ?fields=about,address,description,email,profile_picture_url,websites,vertical
 ```
 
-The `messaging_product` field is mandatory on every request.
+Response wrapped in `{ "data": [ { ... } ] }` (length 1).
 
-To update only specific fields, omit the others:
+### Profile picture upload chain (3 calls)
 
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/whatsapp_business_profile" \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messaging_product": "whatsapp",
-    "email": "newaddress@example.com"
-  }'
-```
+1. `POST /v22.0/{APP_ID}/uploads` — create session, returns `id: upload:<SESSION_ID>`
+2. `POST /v22.0/{SESSION_ID}` with `Authorization: OAuth <TOKEN>` (not `Bearer`) and binary body — returns `h: <HANDLE>`
+3. `POST /v22.0/{PHONE_NUMBER_ID}/whatsapp_business_profile` with `profile_picture_handle: <HANDLE>` (combinable with other field updates)
 
-### Error Examples
+`<APP_ID>` in step 1 must match the anchor app of the System User Token used for authorization.
 
-**Field too long:**
-
-```json
-{
-  "error": {
-    "message": "(#100) Param description must be a maximum of 512 characters",
-    "type": "OAuthException",
-    "code": 100
-  }
-}
-```
-
-**Invalid vertical value:**
-
-```json
-{
-  "error": {
-    "message": "(#100) Param vertical does not match any valid value",
-    "type": "OAuthException",
-    "code": 100
-  }
-}
-```
-
-**Invalid token:**
-
-```json
-{
-  "error": {
-    "message": "Invalid OAuth access token",
-    "type": "OAuthException",
-    "code": 190
-  }
-}
-```
-
----
-
-## Profile Picture Upload Chain
-
-The profile picture is the field that fails most consistently in the Business Manager UI. The Graph API requires three sequential calls but works reliably.
-
-### Call 1 — Create Upload Session
-
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<APP_ID>/uploads" \
-  -H "Authorization: Bearer <TOKEN>" \
-  --data-urlencode "file_name=profile.jpg" \
-  --data-urlencode "file_length=<BYTES>" \
-  --data-urlencode "file_type=image/jpeg"
-```
-
-Response:
-
-```json
-{ "id": "upload:<SESSION_ID>" }
-```
-
-`<APP_ID>` must match the anchor app from the token setup.
-
-### Call 2 — Upload Binary
-
-> The authorization scheme differs from every other call: `OAuth`, not `Bearer`.
-
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<SESSION_ID>" \
-  -H "Authorization: OAuth <TOKEN>" \
-  -H "file_offset: 0" \
-  --data-binary "@/path/to/profile.jpg"
-```
-
-Response:
-
-```json
-{ "h": "<HANDLE>" }
-```
-
-### Call 3 — Attach Handle to Profile
-
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/whatsapp_business_profile" \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messaging_product": "whatsapp",
-    "profile_picture_handle": "<HANDLE>"
-  }'
-```
-
-Response:
-
-```json
-{ "success": true }
-```
-
-The handle can be combined with other field updates in the same request:
-
-```bash
-curl -X POST "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/whatsapp_business_profile" \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messaging_product": "whatsapp",
-    "profile_picture_handle": "<HANDLE>",
-    "about": "Automating Efficiency",
-    "email": "info@example.com"
-  }'
-```
-
-### Image Requirements
+### Image requirements
 
 | Constraint | Value |
 |---|---|
 | Format | JPEG or PNG |
 | Aspect ratio | Square |
-| Resolution | 640×640 px recommended, max 1024×1024 |
-| File size | Under 5 MB |
+| Resolution | 640×640 recommended, max 1024×1024 |
+| File size | < 5 MB |
 | Transparency | Not supported — alpha channel renders as solid white or black |
 
-> Convert PNG to JPEG before upload to avoid transparency rendering issues. The Graph API accepts PNG without warning, but the rendered result on devices is unpredictable.
+> Convert PNG to JPEG before upload. The Graph API accepts PNG without warning, but the rendered result on devices is unpredictable.
+
+### Common errors
+
+`(#100) Param description must be a maximum of 512 characters` — field too long
+`(#100) Param vertical does not match any valid value` — invalid enum
+`Invalid OAuth access token` (code 190) — token died or wrong token type for endpoint
 
 ---
 
 ## Recovery
 
-If the token has died — refresh job failed for over 60 days, anchor app deleted, Facebook password changed:
+### User Token died
 
-1. Open the Graph API Explorer with the **same anchor app** as the original setup
-2. Generate a new short-lived User Token with the same permission set
-3. Run the long-lived exchange (`fb_exchange_token`)
-4. `UPDATE` the `meta_tokens` row with the new token and reset `expires_at`
-5. Re-enable the refresh job
+Refresh job failed for over 60 days, anchor app deleted, FB password changed:
 
-If the anchor app was deleted, a full re-setup with a different anchor app is required, including updating any workflows that reference the old App ID (notably the upload chain).
+1. Graph API Explorer with the **same anchor app** as original setup
+2. Generate new short-lived User Token, same permissions
+3. `fb_exchange_token` → long-lived
+4. `UPDATE` the User Token row, reset `expires_at`
+5. Re-enable refresh job
+
+If the anchor app was deleted, full re-setup with a new anchor app, including updating the refresh job's `client_id` and `client_secret`.
+
+### System User Token died
+
+System User Tokens don't expire on their own but die if their generating app is deleted, the System User is deleted, or the generating Admin loses Portfolio access.
+
+1. Verify the anchor app is still listed under the System User's Assigned Assets
+2. **Generate New Token** → repeat B.5/B.6
+3. `UPDATE` the corresponding `system_token_<portfolio>` row
+
+If the System User itself was deleted, recreate following Part B from B.2.
+
+If the upload-chain anchor app was deleted, every `POST /{APP_ID}/uploads` call will fail. Switch to a different valid app under the same Portfolio and update both the workflow URL and the System User's asset assignment.
 
 ---
 
 ## Multi-Tenant Considerations
 
-For customer-facing products, the single-token model does not apply. Each customer must own their own token, acquired through Meta's Embedded Signup OAuth flow.
+The single-administrator model does not apply to customer-facing products. Each customer must own their own token via Embedded Signup OAuth.
 
-| Aspect | Internal Admin (this document) | SaaS Product |
+| Aspect | Internal Admin (this doc) | SaaS Product |
 |---|---|---|
-| Token count | One | One per customer |
-| Token acquisition | Manual (Graph API Explorer) | Automated (Embedded Signup OAuth) |
-| Token ownership | The administrator | The customer |
-| App Review | Not required | Required for `whatsapp_business_management`, `whatsapp_business_messaging`, `business_management` |
+| Token count | 1 User Token + 1 System Token per Portfolio | 1 Business Integration System User Token per customer |
+| Acquisition | Manual | Automated (Embedded Signup) |
+| Ownership | Administrator | Customer |
+| App Review | Not required | Required |
 | Business Verification | Not required | Required |
-| Refresh logic | Single row | Iteration over all customer tokens |
+| Refresh logic | Single User Token row | Per-customer iteration |
 | Storage encryption | Optional | Mandatory |
 
-### Suggested Multi-Tenant Schema
+### Suggested multi-tenant schema
 
 ```sql
 CREATE TABLE <service_schema>.customer_meta_connections (
@@ -551,7 +411,7 @@ CREATE TABLE <service_schema>.customer_meta_connections (
   waba_id             text,
   phone_number_id     text,
   access_token        text NOT NULL,
-  token_expires_at    timestamptz NOT NULL,
+  token_expires_at    timestamptz,
   scopes              text[],
   reconnect_required  boolean DEFAULT false,
   created_at          timestamptz DEFAULT now(),
@@ -560,7 +420,7 @@ CREATE TABLE <service_schema>.customer_meta_connections (
 );
 ```
 
-The refresh job iterates over `customer_meta_connections`, refreshes each token, and sets `reconnect_required = true` on individual failures. The application UI surfaces a "Reconnect WhatsApp" prompt when this flag is set.
+Refresh job iterates over `customer_meta_connections`, refreshes each token where applicable, sets `reconnect_required = true` on failures. UI surfaces a "Reconnect WhatsApp" prompt when this flag is set.
 
 ---
 
@@ -570,6 +430,7 @@ The refresh job iterates over `customer_meta_connections`, refreshes each token,
 - [WhatsApp Business Profile API](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/business-profiles)
 - [Resumable Upload API](https://developers.facebook.com/docs/graph-api/guides/upload)
 - [Long-Lived Access Tokens](https://developers.facebook.com/docs/facebook-login/guides/access-tokens/get-long-lived)
+- [System User Access Token (WhatsApp)](https://developers.facebook.com/documentation/business-messaging/whatsapp/access-tokens/)
 - [Embedded Signup](https://developers.facebook.com/docs/whatsapp/embedded-signup)
 
 ---
