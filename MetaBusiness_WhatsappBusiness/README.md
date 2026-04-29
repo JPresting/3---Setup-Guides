@@ -202,6 +202,8 @@ Go back to the [developers.facebook.com](https://developers.facebook.com) page, 
 
 **Final steps to connect:**
 
+**Important:** In the OAuth popup, select **"Opt in to all current and future WhatsApp accounts"** instead of "current only". The "current only" option causes Meta to fail with errors about non-existent test number IDs.
+
 1. Click on **Edit Previous Settings**.
 
    ![image](https://github.com/user-attachments/assets/adc1aedb-237a-4438-bd39-a9c45f637f4b)
