@@ -1,21 +1,50 @@
 # WhatsApp Embedded Signup — Setup & Flow
 
-How a WhatsApp Embedded Signup integration is wired end to end: what gets configured on Meta's side, what the platform backend needs, and what happens click-by-click in the browser.
+How a WhatsApp Embedded Signup integration is wired end to end, in the order you actually have to do it: the foundational Meta setup, the App configuration, the platform backend, the frontend, and what happens click-by-click in the browser.
 
-## Meta App side
+## 1. Meta Business — foundation
 
-A single Meta App on Graph API `v25.0` is used. The customer-facing platform is registered as the App's brand.
+Before the App can be touched, a Meta Business (Business Portfolio) has to exist and pass verification:
+
+- **Business verification** — Meta has to confirm the legal entity behind the Business Portfolio (registration documents, domain ownership, address). Without verification the App stays in Development mode and Embedded Signup is hard-capped at internal testers only.
+- **Verified business domain** — the domain serving the platform dashboard is added under Business Settings → Brand Safety → Domains and verified (DNS TXT, meta-tag, or file upload). Required for the Embedded Signup popup and for the Privacy/Terms URLs Meta surfaces.
+
+## 2. Meta App — basics
+
+A single Meta App represents the platform. Under App Settings → Basic, the following are filled in (Meta blocks App Review without them):
+
+- Display Name, App Icon (1024×1024), Category
+- **Privacy Policy URL** (shown in the Embedded Signup consent screen)
+- **Terms of Service URL** (shown in the consent screen)
+- **Data Deletion** instructions URL or callback endpoint
+- App Domains (the platform's dashboard origin)
+- Business Use field set to the verified Business
+
+Graph API version pinned to `v25.0` (App Settings → Advanced).
+
+## 3. Permissions — Advanced Access
+
+Each permission used by Embedded Signup needs Advanced Access via App Review. Without Advanced Access the popup only works for admins/developers/testers of the App.
+
+- `public_profile` — required for `FB.login` itself. Advanced Access is requested under App Review → Permissions and Features. This is the one most teams forget — Standard Access alone makes the SDK silently restrict the popup.
+- `whatsapp_business_messaging`
+- `whatsapp_business_management`
+- `business_management`
+
+Each one is submitted with a written justification + screencast showing the user-facing feature it powers.
+
+## 4. Add Products to the App
+
+Two products are added under the App:
 
 ### Facebook Login for Business — required gotcha
 
-Under the Meta App → **Facebook Login for Business** product, two sub-products both have to be enabled:
+Two sub-products both have to be **enabled** (this trips most teams up):
 
 - **WhatsApp Cloud API**
 - **Marketing Messages API for WhatsApp**
 
-With only WhatsApp Cloud API enabled, the Embedded Signup popup loads but the flow breaks before it returns the WABA and phone number. Both must be on.
-
-### Settings within Facebook Login for Business
+With only WhatsApp Cloud API on, the Embedded Signup popup loads but the flow breaks before it returns the WABA and phone number. Both must be on.
 
 All six toggles in the FLB settings tab are enabled — the full set is needed during onboarding (including event-sharing that the consent screen references).
 
@@ -25,23 +54,20 @@ A branded Embedded Signup config is published under WhatsApp → Embedded Signup
 
 - Branding (logo, copy, accent colours) shown in the Meta-hosted popup.
 - The list of products the user is being onboarded to (WhatsApp Cloud API + Marketing Messages API).
-- Privacy Policy and Terms URLs that Meta surfaces in the popup.
+- Privacy Policy and Terms URLs that Meta surfaces in the popup — must match what's set in App Settings → Basic.
 
-### Permissions requested at OAuth time
+## 5. App Review submission
 
-- `whatsapp_business_messaging`
-- `whatsapp_business_management`
-- `business_management`
+When everything above is in place, App Review is submitted with:
 
-### App Review submission
+- A screencast video walking through the Embedded Signup flow end to end (open the popup, sign in, pick Business Portfolio + WABA + phone number, land back on the platform with the number active).
+- Per-permission written descriptions naming the user-visible feature each permission powers.
+- Privacy Policy URL and Terms URL.
+- A test user account Meta reviewers can use to reproduce the flow.
 
-Meta requires for approval:
+## 6. Go Live + Tech Provider
 
-- A screencast video walking through the Embedded Signup flow end to end (open the popup, sign in, pick a Business Portfolio + WABA + phone number, land back on the platform with the number active).
-- A written description of each requested permission and the user-facing feature it powers.
-- The Privacy Policy URL and Terms URL (must match what's set in the Embedded Signup Builder).
-
-Once the App is approved as a Solution Partner / Tech Provider, the **Partner Solutions** entry appears under the WhatsApp section and customers see the platform as a selectable onboarding option.
+After Meta approves the requested permissions and the App is **switched to Live mode**, the App is eligible to be listed as a Tech Provider / Solution Partner. Once that step is done, the platform appears under WhatsApp → Partner Solutions for end customers.
 
 ## Platform backend
 
@@ -83,15 +109,21 @@ The flow lives inside the "Add WhatsApp Number" wizard, on the "Connect WhatsApp
 7. The backend exchanges the code for a long-lived token, persists the account, and returns the record to the wizard.
 8. The wizard skips Identity + Access Token steps and lands on Webhook delivery with the new number already selected.
 
-## Required from Meta App Review
+## Checklist — what has to exist on Meta before this works
 
-- Demo video covering steps 2–8 of the flow above.
-- A short description for each requested permission, naming the user-visible feature it powers.
-- Privacy Policy URL and Terms URL matching the values in the Embedded Signup Builder.
-- Verified Business Portfolio + App switched to Live mode.
+- Verified Meta Business (Business Portfolio)
+- Verified business domain
+- Meta App with Display Name, Icon, Category
+- App Settings → Basic: Privacy Policy URL, Terms of Service URL, Data Deletion URL, App Domains, Business Use
+- Advanced Access for: `public_profile`, `whatsapp_business_messaging`, `whatsapp_business_management`, `business_management`
+- Facebook Login for Business product added, with **both** WhatsApp Cloud API and Marketing Messages API sub-products enabled, and all six FLB settings toggles on
+- WhatsApp product added, Embedded Signup Builder config published, config ID copied for the frontend
+- App Review submitted and approved with screencast video + per-permission descriptions
+- App switched to Live mode
+- (Optional, for visibility) Tech Provider / Solution Partner status approved
 
-## Required from the platform server
+## Checklist — what has to exist on the platform server
 
-- `META_APP_ID` and `META_APP_SECRET` env vars configured.
-- The code-exchange endpoint reachable from the browser (the platform dashboard origin).
-- A vault or secret-store for the long-lived tokens — never stored in env vars or returned to the client.
+- `META_APP_ID` and `META_APP_SECRET` env vars configured
+- The code-exchange endpoint reachable from the browser (the platform dashboard origin)
+- A vault or secret-store for the long-lived tokens — never stored in env vars or returned to the client
