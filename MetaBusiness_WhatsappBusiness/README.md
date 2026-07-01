@@ -190,7 +190,7 @@ Now go back to [business.facebook.com](https://business.facebook.com) under **Us
 
 It might take a couple of minutes to register.
 
-<img width="853" height="527" alt="image" src="https://github.com/user-attachments/assets/002e3670-b236-4c57-974b-5fb7bf335c19" />
+<img width="853" height="527" alt="image" src="https://github.com/user-attachments/assets/002e3671-b236-4c57-974b-5fb7bf335c19" />
 
 Go back to the [developers.facebook.com](https://developers.facebook.com) page, click on **Generate access token**, and remember the last couple of digits of your WabaID which is displayed on the same page. **IMPORTANT:** select the correct number from the "from" field, otherwise you might retrieve the wrong IDs.
 
@@ -212,8 +212,6 @@ Go back to the [developers.facebook.com](https://developers.facebook.com) page, 
 
    <img width="274" height="314" alt="image" src="https://github.com/user-attachments/assets/fbcfda04-d115-4f83-8205-560c660bf4f2" />
 
-
-
 3. Select the one that matches your **WhatsApp Business Account ID**. In your case, there should be just two options: the one you created and the Test Account.
 
    ![image](https://github.com/user-attachments/assets/946155e7-0551-42d6-a38c-c3009cc0d901)
@@ -230,9 +228,48 @@ Go back to the [developers.facebook.com](https://developers.facebook.com) page, 
 
 <br>
 
+### 2.1.1 Troubleshooting: "Request Business Verification" Button Missing / Grayed Out
+
+If you've successfully connected your WhatsApp Business Account and added direct access to the Facebook Page/Instagram account, but the **"Request Business Verification"** button is not appearing or remains grayed out in the WhatsApp Manager, this is typically caused by a **7-day admin security lockout**.
+
+#### What's happening:
+
+1. **Asset Permissions were missing initially** → Your admin profile was not explicitly granted access to the Page/Instagram asset. This blocks the button from appearing.
+   
+2. **7-Day Security Lockout** → Once you assign direct full access to yourself as admin on the Facebook Page/Instagram account, Meta automatically triggers a 7-day security hold. This prevents immediate account linking/verification to protect the business portfolio from potential compromise.
+   
+3. **Display shows "Try Again Later"** → The button may appear but clicking it returns the error: *"Try again later"* — this is Meta's way of enforcing the security delay.
+
+#### The solution:
+
+**Option A: Wait 7 days** (Automatic)
+- The security hold expires automatically after 7 days from the date you first assigned direct access
+- After 7 days, refresh [business.facebook.com](https://business.facebook.com) and the button should become clickable
+
+**Option B: Use another admin** (Immediate)
+- If another admin on your Business Portfolio has had continuous access to the Facebook Page for **more than 7 days**, they can complete the verification immediately
+- They won't be subject to the 7-day hold because their access predates the security lock
+- No action needed from you — just have them click the button and follow the verification flow
+
+#### Important notes:
+
+> ⚠️ **This is NOT a display name approval issue.** Display name review runs in parallel and does not block the RequestBusinessVerification button. If your display name hasn't been approved yet, that's a separate queue.
+
+> ⚠️ **This is NOT an account security issue.** Meta confirms your account is secure if 2FA is enabled and there are no unauthorized logins. The 7-day hold is purely a precaution for newly-added admins.
+
+#### Verification checklist before the 7 days:
+
+While you wait, confirm these are all set:
+- ✅ Business Portfolio is verified (2FA enabled, document approved)
+- ✅ WhatsApp Business Account status: **Connected** (not Pending)
+- ✅ System User has **full admin access** to the WhatsApp Account
+- ✅ Your admin profile has **full control** on the Facebook Page and Instagram account
+- ✅ Payment method is added and set as default
+- ✅ WhatsApp display name has been submitted for review
+
 <br>
 
-### 2.1.1 Troubleshooting: Number stuck on "Pending" / "Unregistered"
+### 2.1.2 Troubleshooting: Number stuck on "Pending" / "Unregistered"
 
 If after completing all steps above your phone number remains on **Pending** in the WhatsApp Manager, and the API Setup dropdown shows **"This number is unregistered"** even though SMS verification was successful, the cause is usually a stale permission link between your System User and the WhatsApp Business Account.
 
