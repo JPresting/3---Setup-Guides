@@ -130,6 +130,26 @@ Then complete the free-text fields. Be specific — the form explicitly states t
 
 **Note:** This form does not reliably send a confirmation email. Absence of a confirmation does not prove failure, but it is why 5a is recommended alongside it.
 
+### What gets rejected — read this before writing your request
+
+Rejections arrive as a form letter: *"the submission is not in compliance with Reddit's Responsible Builder Policy and/or lacks necessary details."* This wording is deliberately ambiguous. In practice the decisive factor is usually **what the bot does**, not how well the form was filled in.
+
+**Use cases that are reliably rejected:**
+
+- Posting or commenting links to your own content (YouTube, blog, product) in subreddits you do not moderate — regardless of how relevant the content is or whether a human approves each reply. Reddit classifies this as automated self-promotion.
+- Lead generation, outreach, or any workflow whose output is contact with users who did not ask for it.
+- Anything where the benefit accrues primarily to you rather than to the subreddit.
+
+**Use cases with a realistic chance:**
+
+- Read-only analysis, monitoring, dashboards, alerting.
+- Moderation tooling for subreddits you moderate (but build this in Devvit — it will be approved immediately).
+- Tools whose output stays outside Reddit.
+
+**Critical:** Do not submit a second request for the same use case after a rejection. The Responsible Builder Policy explicitly prohibits *"submitting multiple requests for the same use case"* and treats it as misrepresentation. If your first request is denied, either narrow the scope genuinely — for example to read-only, with any posting done manually by a person — and raise that in the existing r/Devvit modmail thread, or accept the read-only path below.
+
+**Design implication:** If your workflow needs to both read and write, split it. The reading half is solvable today without Reddit's permission (see below). The writing half either gets approved or gets done by hand. Plan for the second case.
+
 ---
 
 ## Why Devvit usually doesn't apply
