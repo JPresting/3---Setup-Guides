@@ -1,0 +1,20 @@
+0000000000000000000000000000000000000000 c2deb935623f4d571fbee7334dbf3840e8cb9ae4 JPresting <jim.presting@stardawnai.com> 1763467379 +0100	clone: from https://github.com/JPresting/3---Setup-Guides.git
+c2deb935623f4d571fbee7334dbf3840e8cb9ae4 1d58be894e39488f1f9f23ffa473e7a4b2d5fc9e JPresting <jim.presting@stardawnai.com> 1763480852 +0100	commit: init
+1d58be894e39488f1f9f23ffa473e7a4b2d5fc9e c063f012e3309b343696ebae6ff93bdd1d943141 JPresting <jim.presting@stardawnai.com> 1763482874 +0100	pull --ff --recurse-submodules --progress origin: Fast-forward
+c063f012e3309b343696ebae6ff93bdd1d943141 a101828954b14aeb74d8794d3cccdca68f3ab2f5 JPresting <jim.presting@stardawnai.com> 1765739863 +0100	commit: init
+a101828954b14aeb74d8794d3cccdca68f3ab2f5 d32d21b3e1d34da10814486f43c4149f9c465410 JPresting <jim.presting@stardawnai.com> 1766266222 +0100	pull --ff --recurse-submodules --progress origin: Fast-forward
+d32d21b3e1d34da10814486f43c4149f9c465410 40e3400e440bc690fc5fa6bf8e86b85f7ac433f8 JPresting <jim.presting@stardawnai.com> 1766266316 +0100	commit: change
+40e3400e440bc690fc5fa6bf8e86b85f7ac433f8 9bf4d75644d2ed9778afe86dfe5d3d8a0a0fa790 JPresting <jim.presting@stardawnai.com> 1770568176 +0100	commit: init
+9bf4d75644d2ed9778afe86dfe5d3d8a0a0fa790 c36693f508916a8315b971666feddc933cd01a9d JPresting <jim.presting@stardawnai.com> 1770568183 +0100	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+c36693f508916a8315b971666feddc933cd01a9d 81b9ccaf9ab983194a517103223ce40b1d48388b JPresting <jim.presting@stardawnai.com> 1770588501 +0100	commit: init
+81b9ccaf9ab983194a517103223ce40b1d48388b f2d5576b91e0c9ee1b129b7a17608b1bf9015981 JPresting <jim.presting@stardawnai.com> 1774532700 +0100	commit: Update README.md
+f2d5576b91e0c9ee1b129b7a17608b1bf9015981 53dd54d17b8a18a2012728c597ca75e105c0e00d JPresting <jim.presting@stardawnai.com> 1774532702 +0100	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+53dd54d17b8a18a2012728c597ca75e105c0e00d 96c0d6282c1c9c9702bbf3244469fc019d7d0f2c JPresting <jim.presting@stardawnai.com> 1774533220 +0100	commit: init
+96c0d6282c1c9c9702bbf3244469fc019d7d0f2c fd45098964641a005897e39bf6e2ebd71ca94999 JimPresting <jim.presting@stardawnai.com> 1777221718 +0200	pull --ff --recurse-submodules --progress origin: Fast-forward
+fd45098964641a005897e39bf6e2ebd71ca94999 86679ffd2e48a2db31ba3f0b8f22ff0baef76778 JimPresting <jim.presting@stardawnai.com> 1777222811 +0200	commit: init
+86679ffd2e48a2db31ba3f0b8f22ff0baef76778 4f958abd79a88905eea6d26f8e0fc97dbaef6c5f JimPresting <jim.presting@stardawnai.com> 1781268589 +0200	pull --ff-only: Fast-forward
+4f958abd79a88905eea6d26f8e0fc97dbaef6c5f cf038cdc450ff447d61d5b554cbe548938493dce JimPresting <jim.presting@stardawnai.com> 1781268614 +0200	commit: docs(whatsapp): add App Review submission walkthrough
+cf038cdc450ff447d61d5b554cbe548938493dce 2e35f3a9c84d9d658e96fe7f09fccb8c64c7bada JimPresting <jim.presting@stardawnai.com> 1781888466 +0200	commit: init
+2e35f3a9c84d9d658e96fe7f09fccb8c64c7bada 4c647da51e8d2bcd6bce740b70ba96d06ed91e9e JimPresting <jim.presting@stardawnai.com> 1785674996 +0200	commit: Create Setup-Reddit-Bot.md
+4c647da51e8d2bcd6bce740b70ba96d06ed91e9e 55fafc95f34ab4e0d9ffe8c06138b32be0a64801 JimPresting <jim.presting@stardawnai.com> 1785674999 +0200	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+55fafc95f34ab4e0d9ffe8c06138b32be0a64801 3549f7af01d019164e61276aef62766086ac9bf2 JimPresting <jim.presting@stardawnai.com> 1786016986 +0200	commit: Document Reddit Data API access path and rejection criteria

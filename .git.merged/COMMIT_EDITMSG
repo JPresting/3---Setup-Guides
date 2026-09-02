@@ -1,0 +1,7 @@
+Document Reddit Data API access path and rejection criteria
+
+Covers the two-account setup, developer registration, and both request
+channels. Adds a section on which use cases get rejected, since the
+self-service app creation form is effectively closed as of Aug 2026.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
